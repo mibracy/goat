@@ -11,7 +11,7 @@ import (
 	"github.com/uptrace/bun"
 
 	"goat/app/renderer"
-	userModel "goat/services/models"
+	"goat/services/models"
 )
 
 type UserHandler struct {
@@ -23,7 +23,19 @@ func NewUserHandler(db *bun.DB) *UserHandler {
 }
 
 func (h *UserHandler) ListUsers(w http.ResponseWriter, r *http.Request) {
-	users, err := userModel.GetUsers(h.db, context.Background())
+	users, err := models.GetUsers(h.db, context.Background())
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, users)
+}
+
+func (h *UserHandler) ListUsersByRole(w http.ResponseWriter, r *http.Request) {
+	role := chi.URLParam(r, "role")
+	users, err := models.GetUsersByRole(h.db, context.Background(), role)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
@@ -41,7 +53,7 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 		renderer.PrettyJSON(w, r, "Invalid user ID")
 		return
 	}
-	user, err := userModel.GetUserByID(h.db, context.Background(), idNum)
+	user, err := models.GetUserByID(h.db, context.Background(), idNum)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
@@ -57,7 +69,7 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
-	data := &userModel.User{}
+	data := &models.User{}
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
@@ -66,7 +78,7 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = userModel.CreateUser(h.db, context.Background(), data)
+	err = models.CreateUser(h.db, context.Background(), data)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
@@ -84,23 +96,39 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		renderer.PrettyJSON(w, r, "Invalid user ID")
 		return
 	}
-	user := &userModel.User{}
-	err = json.NewDecoder(r.Body).Decode(&user)
+
+	existingUser, err := models.GetUserByID(h.db, context.Background(), idNum)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	if existingUser == nil {
+		render.Status(r, http.StatusNotFound)
+		renderer.PrettyJSON(w, r, "User not found")
+		return
+	}
+
+	var updateData struct {
+		Name string `json:"name"`
+	}
+	err = json.NewDecoder(r.Body).Decode(&updateData)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
 		renderer.PrettyJSON(w, r, err.Error())
 		return
 	}
-	user.ID = idNum
 
-	err = userModel.UpdateUser(h.db, context.Background(), user)
+	existingUser.Name = updateData.Name
+
+	err = models.UpdateUser(h.db, context.Background(), existingUser)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
 		return
 	}
 	render.Status(r, http.StatusOK)
-	renderer.PrettyJSON(w, r, user)
+	renderer.PrettyJSON(w, r, existingUser)
 }
 
 func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
@@ -112,7 +140,7 @@ func (h *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = userModel.DeleteUser(h.db, context.Background(), idNum)
+	err = models.DeleteUser(h.db, context.Background(), idNum)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())

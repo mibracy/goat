@@ -11,12 +11,23 @@
                 font-family: 'Courier New', Courier, monospace;
                 margin: 20px;
             }
+            @keyframes pulse {
+                0% {
+                    text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                }
+                50% {
+                    text-shadow: 0 0 10px #0F0, 0 0 20px #0F0, 0 0 30px #0F0, 0 0 40px #0F0;
+                }
+                100% {
+                    text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                }
+            }
+
             h1 {
                 text-align: center;
                 text-transform: uppercase;
                 letter-spacing: 5px;
-                transition: text-shadow 0.3s ease-in-out;
-                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                animation: pulse 4.2s infinite alternate; /* Apply the pulse animation */
             }
             h1:hover, h2:hover {
                 text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
@@ -58,13 +69,73 @@
                 margin-bottom: 5px;
             }
             input[type="text"],
-            input[type="number"] {
+            input[type="number"],
+            select,
+            textarea { /* Added textarea */
                 background-color: #222;
                 color: #0F0;
                 border: 1px solid #0F0;
                 padding: 8px;
-                width: 200px;
-                margin-bottom: 10px;
+                width: 200px; /* Default width, overridden by grid */
+                margin-bottom: 0; /* Removed margin-bottom, using grid gap */
+                -webkit-appearance: none; /* Remove default dropdown arrow for better styling */
+                -moz-appearance: none;
+                appearance: none;
+                background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%230F0%22%20d%3D%22M2%200L0%202h4zm0%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+                background-repeat: no-repeat;
+                background-position: right .7em top 50%;
+                background-size: .65em auto;
+            }
+
+            textarea {
+                resize: vertical; /* Allow vertical resizing */
+                min-height: 80px; /* Minimum height for multiline */
+            }
+
+            /* Style for the form layout */
+            .form-group-item {
+                display: grid;
+                grid-template-columns: 150px 1fr; /* Label fixed, input fluid */
+                gap: 10px;
+                margin-bottom: 10px; /* Gap between form items */
+                align-items: center;
+            }
+
+            .form-group-item label {
+                text-align: right;
+                padding-right: 10px;
+            }
+
+            .form-group-item input,
+            .form-group-item select,
+            .form-group-item textarea {
+                width: 100%;
+                box-sizing: border-box;
+            }
+
+            /* Specific width for title input */
+            #createTicketForm .form-group-item:nth-child(1) { /* Targeting the title form-group-item */
+                grid-template-columns: 150px 40%; /* Label 150px, input 40% of the row */
+            }
+
+            /* Full width for description */
+            #createTicketForm .form-group-item.full-width-item {
+                grid-template-columns: 150px 1fr; /* Label 150px, input takes rest */
+            }
+
+            #createTicketForm .form-group-item.full-width-item label {
+                text-align: left; /* Align label to left for full-width items */
+                padding-right: 0;
+            }
+
+            .form-group-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr); /* Two columns for status/priority and requester/assignee */
+                gap: 10px;
+            }
+
+            .form-group-grid .form-group-item {
+                margin-bottom: 0; /* Remove margin as gap handles it */
             }
             button {
                 background-color: #0F0;
@@ -78,6 +149,21 @@
             button:hover {
                 background-color: #0A0;
                 text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+            }
+            .button-group {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px; /* Spacing between buttons */
+                justify-content: center; /* Center buttons */
+                margin-bottom: 10px;
+            }
+            .button-group form {
+                margin: 0; /* Remove default form margin */
+            }
+            .button-group button {
+                width: auto; /* Adjust button width */
+                flex-grow: 1; /* Allow buttons to grow and fill space */
+                min-width: 120px; /* Minimum width for mobile */
             }
             pre {
                 background-color: #111;
@@ -102,7 +188,6 @@
 
         <div class="menu">
             <button onclick="showModel('users')" class="active">Users</button>
-            <button onclick="showModel('customers')">Customers</button>
             <button onclick="showModel('tickets')">Tickets</button>
             <button onclick="showModel('comments')">Comments</button>
         </div>
@@ -110,10 +195,21 @@
         <div id="users" class="model-section active">
             <h2>Users</h2>
             <div>
-                <h3>List Users (GET /admin/)</h3>
-                <form id="listUsersForm">
-                    <button type="submit">List All Users</button>
-                </form>
+                <h3>List Users (GET /admin/) (GET /admin/role/{role})</h3>
+                <div class="button-group">
+                    <form id="listUsersForm">
+                        <button type="submit">List All Users</button>
+                    </form>
+                    <form id="listAdminsForm">
+                        <button type="submit">List All Admins</button>
+                    </form>
+                    <form id="listAgentsForm">
+                        <button type="submit">List All Agents</button>
+                    </form>
+                    <form id="listCustomersForm">
+                        <button type="submit">List All Customers</button>
+                    </form>
+                </div>
             </div>
 
             <div>
@@ -155,22 +251,58 @@
             </div>
         </div>
 
-        <div id="customers" class="model-section">
-            <h2>Customers</h2>
-            <div>
-                <h3>List Customers (GET /admin/customers)</h3>
-                <form id="listCustomersForm">
-                    <button type="submit">List All Customers</button>
-                </form>
-            </div>
-        </div>
-
         <div id="tickets" class="model-section">
             <h2>Tickets</h2>
             <div>
                 <h3>List Tickets (GET /admin/tickets)</h3>
                 <form id="listTicketsForm">
                     <button type="submit">List All Tickets</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Create Ticket (POST /admin/tickets)</h3>
+                <form id="createTicketForm">
+                    <div class="form-group-item">
+                        <label for="createTicketTitle">Title:</label>
+                        <input type="text" id="createTicketTitle" name="title" required />
+                    </div>
+
+                    <div class="form-group-item ">
+                        <label for="createTicketDescription">Description:</label>
+                        <textarea id="createTicketDescription" name="description"></textarea>
+                    </div>
+
+                    <div class="form-group-grid" >
+                        <div class="form-group-item">
+                            <label for="createTicketStatus">Status:</label>
+                            <select id="createTicketStatus" name="status">
+                                <option value="Open">Open</option>
+<!--                                <option value="In Progress">In Progress</option>-->
+<!--                                <option value="Resolved">Resolved</option>-->
+<!--                                <option value="Closed">Closed</option>-->
+                            </select>
+                        </div>
+                        <div class="form-group-item">
+                            <label for="createTicketPriority">Priority:</label>
+                            <select id="createTicketPriority" name="priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+                        <div class="form-group-item">
+                            <label for="createTicketRequesterId">Requester ID:</label>
+                            <input type="number" id="createTicketRequesterId" name="requester_id" required />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="createTicketAssigneeId">Assignee ID (Optional):</label>
+                            <input type="number" id="createTicketAssigneeId" name="assignee_id" />
+                        </div>
+                    </div>
+
+                    <button type="submit">Create Ticket</button>
                 </form>
             </div>
         </div>
@@ -192,7 +324,7 @@
 
         <script>
             const apiResponse = document.getElementById("apiResponse");
-            const baseUrl = "http://localhost:8420";
+            const baseUrl = window.location.origin;
 
             function showModel(modelName) {
                 document.querySelectorAll('.model-section').forEach(section => {
@@ -229,6 +361,19 @@
                 callApi("GET", `${baseUrl}/admin/`);
             });
 
+            document.getElementById("listAdminsForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/role/Admin`);
+            });
+            document.getElementById("listAgentsForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/role/Agent`);
+            });
+            document.getElementById("listCustomersForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/role/Customer`);
+            });
+
             document.getElementById("createUserForm").addEventListener("submit", (e) => {
                 e.preventDefault();
                 const name = document.getElementById("createName").value;
@@ -254,16 +399,35 @@
                 callApi("DELETE", `${baseUrl}/admin/delete/${id}`);
             });
 
-            // Customer Forms
-            document.getElementById("listCustomersForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/customers`);
-            });
-
             // Ticket Forms
             document.getElementById("listTicketsForm").addEventListener("submit", (e) => {
                 e.preventDefault();
                 callApi("GET", `${baseUrl}/admin/tickets`);
+            });
+
+            document.getElementById("createTicketForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const title = document.getElementById("createTicketTitle").value;
+                const description = document.getElementById("createTicketDescription").value;
+                const status = document.getElementById("createTicketStatus").value;
+                const priority = document.getElementById("createTicketPriority").value;
+                const requesterId = parseInt(document.getElementById("createTicketRequesterId").value);
+                const assigneeIdInput = document.getElementById("createTicketAssigneeId").value;
+                const assigneeId = assigneeIdInput ? parseInt(assigneeIdInput) : null;
+
+                const ticketData = {
+                    Title: title,
+                    Description: description,
+                    Status: status,
+                    Priority: priority,
+                    RequesterID: requesterId,
+                };
+
+                if (assigneeId !== null) {
+                    ticketData.AssigneeID = assigneeId;
+                }
+
+                callApi("POST", `${baseUrl}/admin/tickets`, ticketData);
             });
 
             // Comment Forms

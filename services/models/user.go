@@ -44,7 +44,7 @@ func CreateUser(db *bun.DB, ctx context.Context, user *User) error {
 
 // UpdateUser updates an existing user in the database.
 func UpdateUser(db *bun.DB, ctx context.Context, user *User) error {
-	_, err := db.NewUpdate().Model(user).WherePK().Exec(ctx)
+	_, err := db.NewUpdate().Model(user).Set("name = ?", user.Name).Where("id = ?", user.ID).Exec(ctx)
 	return err
 }
 
@@ -58,6 +58,16 @@ func DeleteUser(db *bun.DB, ctx context.Context, userID int64) error {
 func GetUsers(db *bun.DB, ctx context.Context) ([]*User, error) {
 	var users []*User
 	err := db.NewSelect().Model(&users).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+// GetCustomers retrieves a list of users with the role 'Customer' from the database.
+func GetUsersByRole(db *bun.DB, ctx context.Context, role string) ([]*User, error) {
+	var users []*User
+	err := db.NewSelect().Model(&users).Where("role = ?", role).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

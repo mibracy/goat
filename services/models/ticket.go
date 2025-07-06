@@ -59,7 +59,7 @@ func CreateTicket(db *bun.DB, ctx context.Context, ticket *Ticket) error {
 
 // UpdateTicket updates an existing ticket in the database.
 func UpdateTicket(db *bun.DB, ctx context.Context, ticket *Ticket) error {
-	_, err := db.NewUpdate().Model(ticket).WherePK().Exec(ctx)
+	_, err := db.NewUpdate().Model(ticket).Where("id = ? ", ticket.ID).Exec(ctx)
 	return err
 }
 

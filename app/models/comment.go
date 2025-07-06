@@ -4,11 +4,11 @@ import (
 	"context"
 	"net/http"
 
+	"github.com/go-chi/render"
 	"github.com/uptrace/bun"
+
 	"goat/app/renderer"
 	"goat/services/models"
-
-	"github.com/go-chi/render"
 )
 
 type CommentHandler struct {

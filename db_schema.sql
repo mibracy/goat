@@ -10,15 +10,6 @@ CREATE TABLE `users` (
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
---
--- Table structure for table `customers`
---
-CREATE TABLE `customers` (
-    `id` INT AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(255) NOT NULL,
-    `email` VARCHAR(255) NOT NULL,
-    `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP
-);
 
 --
 -- Table structure for table `tickets`
@@ -34,7 +25,7 @@ CREATE TABLE `tickets` (
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `closed_at` DATETIME,
-    FOREIGN KEY (`requester_id`) REFERENCES `customers`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
+    FOREIGN KEY (`requester_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (`assignee_id`) REFERENCES `users`(`id`) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
@@ -49,5 +40,5 @@ CREATE TABLE `comments` (
     `is_internal` BOOLEAN DEFAULT FALSE,
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (`ticket_id`) REFERENCES `tickets`(`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON DELETE RESTRICT ON UPDATE CASCADE
+    FOREIGN KEY (`author_id`) REFERENCES `users`(`id`) ON DELETE CASCADE ON UPDATE CASCADE
 );

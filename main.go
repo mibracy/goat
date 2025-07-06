@@ -9,51 +9,11 @@ import (
 	"github.com/uptrace/bun"
 
 	router "goat/app/controllers"
-	dbconn "goat/db"
+	"goat/services/config"
 	model "goat/services/models"
 )
 
-func demoCustomerOps(db *bun.DB, ctx context.Context) {
-	// Retrieve a customer by ID
-	fmt.Println("\n--- Retrieving Customer ---")
-	testCustomer, err := model.GetCustomerById(db, ctx, 1)
-
-	if err != nil {
-		log.Printf("Error retrieving customer: %v\n", err)
-	} else {
-		fmt.Printf("Retrieved Customer:\n")
-		fmt.Printf("                id: %d\n "+
-			"             name: %s\n "+
-			"          created: %s\n "+
-			"            email: %s \n\n", testCustomer.ID,
-			testCustomer.Name,
-			testCustomer.Created,
-			testCustomer.Email)
-	}
-
-	// Insert a new customer
-	fmt.Println("\n--- Creating New Customer ---")
-	newCustomer := &model.Customer{
-		Name:  gofakeit.Name(),
-		Email: gofakeit.Email(),
-	}
-
-	err = model.CreateCustomer(db, ctx, newCustomer)
-	if err != nil {
-		log.Printf("Error creating customer: %v\n", err)
-	} else {
-		fmt.Printf("Created Customer:\n")
-		fmt.Printf("              id: %d\n "+
-			"           name: %s\n "+
-			"        created: %s\n "+
-			"          email: %s \n\n", newCustomer.ID,
-			newCustomer.Name,
-			newCustomer.Created,
-			newCustomer.Email)
-	}
-}
-
-func demoUserOps(db *bun.DB, ctx context.Context) {
+func demoUsersOps(db *bun.DB, ctx context.Context) {
 	// Retrieve a user by ID
 	fmt.Println("\n--- Retrieving User ---")
 	testUser, err := model.GetUserByID(db, ctx, 1)
@@ -65,10 +25,12 @@ func demoUserOps(db *bun.DB, ctx context.Context) {
 		fmt.Printf("            id: %d\n "+
 			"         name: %s\n "+
 			"        email: %s\n "+
+			"         hash: %s\n "+
 			"         role: %s\n "+
 			"      created: %s \n\n", testUser.ID,
 			testUser.Name,
 			testUser.Email,
+			testUser.PasswordHash,
 			testUser.Role,
 			testUser.CreatedAt)
 	}
@@ -90,10 +52,12 @@ func demoUserOps(db *bun.DB, ctx context.Context) {
 		fmt.Printf("          id: %d\n "+
 			"       name: %s\n "+
 			"      email: %s\n "+
+			"       hash: %s\n "+
 			"       role: %s\n "+
 			"    created: %s \n\n", newUser.ID,
 			newUser.Name,
 			newUser.Email,
+			newUser.PasswordHash,
 			newUser.Role,
 			newUser.CreatedAt)
 	}
@@ -220,10 +184,9 @@ func demoCommentOps(db *bun.DB, ctx context.Context) {
 
 func main() {
 	ctx := context.Background()
-	db := dbconn.ConnectDB()
+	db := config.ConnectDB()
 
-	demoCustomerOps(db, ctx)
-	demoUserOps(db, ctx)
+	demoUsersOps(db, ctx)
 	demoTicketOps(db, ctx)
 	demoCommentOps(db, ctx)
 
