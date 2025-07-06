@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>GOAT API Viewer</title>
+        <style>
+            body {
+                background-color: #000;
+                color: #0F0;
+                font-family: 'Courier New', Courier, monospace;
+                margin: 20px;
+            }
+            h1 {
+                text-align: center;
+                text-transform: uppercase;
+                letter-spacing: 5px;
+                transition: text-shadow 0.3s ease-in-out;
+                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+            }
+            h1:hover, h2:hover {
+                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+            }
+            .menu {
+                text-align: center;
+            }
+            .menu button {
+                background-color: #222;
+                color: #0F0;
+                border: 1px solid #0F0;
+                padding: 10px 15px;
+                cursor: pointer;
+                text-transform: uppercase;
+            }
+            .menu button.active {
+                background-color: #0F0;
+                color: #000;
+            }
+            .model-section {
+                display: none;
+            }
+            .model-section.active {
+                display: block;
+            }
+            div {
+                border: 1px solid #0F0;
+                border-radius: 0;
+                margin-bottom: 20px;
+                padding: 15px;
+            }
+            h2, h3 {
+                color: #0F0;
+                text-transform: uppercase;
+                transition: text-shadow 0.3s ease-in-out;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            input[type="text"],
+            input[type="number"] {
+                background-color: #222;
+                color: #0F0;
+                border: 1px solid #0F0;
+                padding: 8px;
+                width: 200px;
+                margin-bottom: 10px;
+            }
+            button {
+                background-color: #0F0;
+                color: #000;
+                border: none;
+                padding: 10px 15px;
+                cursor: pointer;
+                text-transform: uppercase;
+                transition: text-shadow 0.3s ease-in-out;
+            }
+            button:hover {
+                background-color: #0A0;
+                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+            }
+            pre {
+                background-color: #111;
+                border: 1px dashed #0F0;
+                padding: 10px;
+                overflow-x: auto;
+                white-space: pre-wrap;
+                word-wrap: break-word;
+            }
+
+            #response-container {
+                max-height: 50vh;
+                overflow-y: auto;
+                border: 1px solid #0F0;
+                padding: 10px;
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>GOAT API Viewer</h1>
+
+        <div class="menu">
+            <button onclick="showModel('users')" class="active">Users</button>
+            <button onclick="showModel('customers')">Customers</button>
+            <button onclick="showModel('tickets')">Tickets</button>
+            <button onclick="showModel('comments')">Comments</button>
+        </div>
+
+        <div id="users" class="model-section active">
+            <h2>Users</h2>
+            <div>
+                <h3>List Users (GET /admin/)</h3>
+                <form id="listUsersForm">
+                    <button type="submit">List All Users</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Create User (POST /admin/)</h3>
+                <form id="createUserForm">
+                    <label for="createName">Name:</label>
+                    <input type="text" id="createName" name="name" required />
+                    <button type="submit">Create User</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Get User by ID (GET /admin/{id})</h3>
+                <form id="getUserForm">
+                    <label for="getUserId">User ID:</label>
+                    <input type="number" id="getUserId" name="id" required />
+                    <button type="submit">Get User</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Update User (PUT /admin/update/{id})</h3>
+                <form id="updateUserForm">
+                    <label for="updateUserId">User ID:</label>
+                    <input type="number" id="updateUserId" name="id" required />
+                    <label for="updateName">New Name:</label>
+                    <input type="text" id="updateName" name="name" required />
+                    <button type="submit">Update User</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Delete User (DELETE /admin/delete/{id})</h3>
+                <form id="deleteUserForm">
+                    <label for="deleteUserId">User ID:</label>
+                    <input type="number" id="deleteUserId" name="id" required />
+                    <button type="submit">Delete User</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="customers" class="model-section">
+            <h2>Customers</h2>
+            <div>
+                <h3>List Customers (GET /admin/customers)</h3>
+                <form id="listCustomersForm">
+                    <button type="submit">List All Customers</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="tickets" class="model-section">
+            <h2>Tickets</h2>
+            <div>
+                <h3>List Tickets (GET /admin/tickets)</h3>
+                <form id="listTicketsForm">
+                    <button type="submit">List All Tickets</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="comments" class="model-section">
+            <h2>Comments</h2>
+            <div>
+                <h3>List Comments (GET /admin/comments)</h3>
+                <form id="listCommentsForm">
+                    <button type="submit">List All Comments</button>
+                </form>
+            </div>
+        </div>
+
+        <h2>API Response:</h2>
+        <div id="response-container">
+            <pre id="apiResponse"></pre>
+        </div>
+
+        <script>
+            const apiResponse = document.getElementById("apiResponse");
+            const baseUrl = "http://localhost:8420";
+
+            function showModel(modelName) {
+                document.querySelectorAll('.model-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(modelName).classList.add('active');
+
+                document.querySelectorAll('.menu button').forEach(button => {
+                    button.classList.remove('active');
+                });
+                document.querySelector(`.menu button[onclick="showModel('${modelName}')"]`).classList.add('active');
+            }
+
+            async function callApi(method, path, body = null) {
+                const options = { method };
+                if (body) {
+                    options.headers = { "Content-Type": "application/json" };
+                    options.body = JSON.stringify(body);
+                }
+
+                try {
+                    const response = await fetch(path, options);
+                    const data = await response.text();
+                    apiResponse.textContent = data;
+                } catch (error) {
+                    apiResponse.textContent = "Error: " + error.message;
+                    console.error("API Call Error:", error);
+                }
+            }
+
+            // User Forms
+            document.getElementById("listUsersForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/`);
+            });
+
+            document.getElementById("createUserForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const name = document.getElementById("createName").value;
+                callApi("POST", `${baseUrl}/admin/`, { Name: name });
+            });
+
+            document.getElementById("getUserForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const id = document.getElementById("getUserId").value;
+                callApi("GET", `${baseUrl}/admin/${id}`);
+            });
+
+            document.getElementById("updateUserForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const id = document.getElementById("updateUserId").value;
+                const name = document.getElementById("updateName").value;
+                callApi("PUT", `${baseUrl}/admin/update/${id}`, { Name: name });
+            });
+
+            document.getElementById("deleteUserForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                const id = document.getElementById("deleteUserId").value;
+                callApi("DELETE", `${baseUrl}/admin/delete/${id}`);
+            });
+
+            // Customer Forms
+            document.getElementById("listCustomersForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/customers`);
+            });
+
+            // Ticket Forms
+            document.getElementById("listTicketsForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/tickets`);
+            });
+
+            // Comment Forms
+            document.getElementById("listCommentsForm").addEventListener("submit", (e) => {
+                e.preventDefault();
+                callApi("GET", `${baseUrl}/admin/comments`);
+            });
+        </script>
+    </body>
+</html>

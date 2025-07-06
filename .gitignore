@@ -1,0 +1,46 @@
+.idea/
+.vscode/
+.history/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Debug binaries
+debug
+
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, build with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Node modules
+node_modules/
+
+# Build output
+dist/
+
+# Local environment variables
+.env.local
+
+# Log files
+*.log
+
+# Vite cache
+.vite/
+
+# MacOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+*/mariadbstore.go
