@@ -44,7 +44,7 @@ func CreateUser(db *bun.DB, ctx context.Context, user *User) error {
 
 // UpdateUser updates an existing user in the database.
 func UpdateUser(db *bun.DB, ctx context.Context, user *User) error {
-	_, err := db.NewUpdate().Model(user).Set("name = ?", user.Name).Where("id = ?", user.ID).Exec(ctx)
+	_, err := db.NewUpdate().Model(user).Where("id = ?", user.ID).Exec(ctx)
 	return err
 }
 

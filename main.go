@@ -38,10 +38,9 @@ func demoUsersOps(db *bun.DB, ctx context.Context) {
 	// Insert a new user
 	fmt.Println("\n--- Creating New User ---")
 	newUser := &model.User{
-		Name:         gofakeit.Name(),
-		Email:        gofakeit.Email(),
-		PasswordHash: gofakeit.Password(true, true, true, true, true, 10), // In a real app, this would be a proper hash
-		Role:         gofakeit.RandomString([]string{"Admin", "Agent", "Customer"}),
+		Name:  gofakeit.Name(),
+		Email: gofakeit.Email(),
+		Role:  gofakeit.RandomString([]string{"Admin", "Agent", "Customer"}),
 	}
 
 	err = model.CreateUser(db, ctx, newUser)

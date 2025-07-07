@@ -243,8 +243,22 @@
             <div>
                 <h3>Create User (POST /admin/)</h3>
                 <form id="createUserForm">
-                    <label for="createName">Name:</label>
-                    <input type="text" id="createName" name="name" required />
+                    <div class="form-group-item">
+                        <label for="createName">Name:</label>
+                        <input type="text" id="createName" name="name" required />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="createEmail">Email:</label>
+                        <input type="text" id="createEmail" name="email" required />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="createRole">Role:</label>
+                        <select id="createRole" name="role">
+                            <option value="Customer">Customer</option>
+                            <option value="Agent">Agent</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
                     <button type="submit">Create User</button>
                 </form>
             </div>
@@ -261,10 +275,26 @@
             <div>
                 <h3>Update User (PUT /admin/update/{id})</h3>
                 <form id="updateUserForm">
-                    <label for="updateUserId">User ID:</label>
-                    <input type="text" id="updateUserId" name="id" required class="js-number-input" />
-                    <label for="updateName">New Name:</label>
-                    <input type="text" id="updateName" name="name" required />
+                    <div class="form-group-item">
+                        <label for="updateUserId">User ID:</label>
+                        <input type="text" id="updateUserId" name="id" required class="js-number-input" />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="updateName">New Name:</label>
+                        <input type="text" id="updateName" name="name" required />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="updateEmail">New Email:</label>
+                        <input type="text" id="updateEmail" name="email" required />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="updateRole">New Role:</label>
+                        <select id="updateRole" name="role">
+                            <option value="Customer">Customer</option>
+                            <option value="Agent">Agent</option>
+                            <option value="Admin">Admin</option>
+                        </select>
+                    </div>
                     <button type="submit">Update User</button>
                 </form>
             </div>
@@ -578,7 +608,9 @@
             document.getElementById("createUserForm").addEventListener("submit", (e) => {
                 e.preventDefault();
                 const name = document.getElementById("createName").value;
-                callApi("POST", `${baseUrl}/admin/`, { Name: name });
+                const email = document.getElementById("createEmail").value;
+                const role = document.getElementById("createRole").value;
+                callApi("POST", `${baseUrl}/admin/`, { Name: name, Email: email, Role: role });
             });
 
             document.getElementById("getUserForm").addEventListener("submit", (e) => {
@@ -591,7 +623,9 @@
                 e.preventDefault();
                 const id = document.getElementById("updateUserId").value;
                 const name = document.getElementById("updateName").value;
-                callApi("PUT", `${baseUrl}/admin/update/${id}`, { Name: name });
+                const email = document.getElementById("updateEmail").value;
+                const role = document.getElementById("updateRole").value;
+                callApi("PUT", `${baseUrl}/admin/update/${id}`, { Name: name, Email: email, Role: role });
             });
 
             document.getElementById("deleteUserForm").addEventListener("submit", (e) => {

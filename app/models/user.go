@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/brianvoe/gofakeit/v6"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/render"
 	"github.com/uptrace/bun"
@@ -78,6 +79,9 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Generate a random password hash
+	data.PasswordHash = gofakeit.Password(true, true, true, true, true, 10)
+
 	err = models.CreateUser(h.db, context.Background(), data)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
@@ -110,7 +114,9 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var updateData struct {
-		Name string `json:"name"`
+		Name  string `json:"name"`
+		Email string `json:"email"`
+		Role  string `json:"role"`
 	}
 	err = json.NewDecoder(r.Body).Decode(&updateData)
 	if err != nil {
@@ -120,6 +126,8 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	existingUser.Name = updateData.Name
+	existingUser.Email = updateData.Email
+	existingUser.Role = updateData.Role
 
 	err = models.UpdateUser(h.db, context.Background(), existingUser)
 	if err != nil {
