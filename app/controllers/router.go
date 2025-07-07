@@ -39,8 +39,11 @@ func SetupServer() {
 		r.Get("/role/{role}", userHandler.ListUsersByRole)
 		r.Get("/tickets", ticketHandler.ListTickets)
 		r.Post("/tickets", ticketHandler.CreateTicket)
-		r.Get("/tickets/{}", ticketHandler.ListTickets)
+		r.Get("/tickets/{id}", ticketHandler.GetTicket)
+		r.Put("/tickets/{id}", ticketHandler.UpdateTicket)
 		r.Get("/comments", commentHandler.ListComments)
+		r.Post("/comments", commentHandler.CreateComment)
+		r.Get("/comments/ticket/{id}", commentHandler.ListCommentsByTicketID)
 	})
 
 	r.Route("/agent", func(r chi.Router) {

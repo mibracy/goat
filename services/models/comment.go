@@ -40,6 +40,16 @@ func ListComments(db *bun.DB, ctx context.Context) ([]Comment, error) {
 	return comments, nil
 }
 
+// ListCommentsByTicketID retrieves comments for a specific ticket from the database.
+func ListCommentsByTicketID(db *bun.DB, ctx context.Context, ticketID int64) ([]Comment, error) {
+	var comments []Comment
+	err := db.NewSelect().Model(&comments).Where("ticket_id = ?", ticketID).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return comments, nil
+}
+
 // CreateComment inserts a new comment into the database.
 func CreateComment(db *bun.DB, ctx context.Context, comment *Comment) error {
 	_, err := db.NewInsert().Model(comment).Exec(ctx)

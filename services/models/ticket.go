@@ -20,9 +20,9 @@ type Ticket struct {
 	Priority      string        `bun:"priority,notnull,default:'Medium'"`
 	RequesterID   int64         `bun:"requester_id,notnull"`
 	AssigneeID    sql.NullInt64 `bun:"assignee_id"` // Use sql.NullInt64 for nullable foreign key
-	CreatedAt     time.Time     `bun:"created_at,notnull,default:current_timestamp"`
-	UpdatedAt     time.Time     `bun:"updated_at,notnull,default:current_timestamp"`
-	ClosedAt      sql.NullTime  `bun:"closed_at"` // Use sql.NullTime for nullable timestamp
+	CreatedAt     time.Time     `bun:"created_at,notnull,default:current_timestamp" json:"CreatedAt"`
+	UpdatedAt     time.Time     `bun:"updated_at,notnull,default:current_timestamp" json:"UpdatedAt"`
+	ClosedAt      sql.NullTime  `bun:"closed_at" json:"ClosedAt"` // Use sql.NullTime for nullable timestamp
 }
 
 // GetTicketByID retrieves a ticket from the database by its ID.

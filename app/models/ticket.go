@@ -3,7 +3,9 @@ package models
 import (
 	"context"
 	"database/sql"
+	"github.com/go-chi/chi/v5"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/render"
 	"github.com/uptrace/bun"
@@ -75,5 +77,83 @@ func (h *TicketHandler) CreateTicket(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.Status(r, http.StatusCreated)
+	renderer.PrettyJSON(w, r, ticket)
+}
+
+// GetTicket handles the request to get a ticket by ID.
+func (h *TicketHandler) GetTicket(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	ticket, err := models.GetTicketByID(h.db, ctx, id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, ticket)
+}
+
+// UpdateTicket handles the request to update an existing ticket.
+func (h *TicketHandler) UpdateTicket(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	var req struct {
+		Title       string `json:"Title"`
+		Description string `json:"Description"`
+		Status      string `json:"Status"`
+		Priority    string `json:"Priority"`
+		RequesterID int64  `json:"RequesterID"`
+		AssigneeID  *int64 `json:"AssigneeID"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	ticket := models.Ticket{
+		ID:          id,
+		Title:       req.Title,
+		Description: req.Description,
+		Status:      req.Status,
+		Priority:    req.Priority,
+		RequesterID: req.RequesterID,
+	}
+
+	if req.AssigneeID != nil {
+		ticket.AssigneeID = sql.NullInt64{Int64: *req.AssigneeID, Valid: true}
+	} else {
+		ticket.AssigneeID = sql.NullInt64{Valid: false}
+	}
+
+	if err := models.UpdateTicket(h.db, ctx, &ticket); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
 	renderer.PrettyJSON(w, r, ticket)
 }
