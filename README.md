@@ -6,8 +6,7 @@
 
 🐐 is not your average ticking system. Lightweight, modular, and extensible ticketing system built with Go. 
 It's designed to be a foundation for a robust and scalable customer support and issue tracking platform. 
-The project is structured with a clear separation of concerns, making it easy to understand, maintain, and extend.
-
+The project is structured with a clear separation of concerns, making it easy to understand, maintain, and extend. Architecture inspired by YATS
 
 ## Core Concepts
 
