@@ -62,9 +62,35 @@ The system is built around the idea of providing a solid backend for a ticketing
     ```
     This page provides forms to test the different user endpoints.
 
+## Docker
+
+To build the Docker image:
+```bash
+docker build -t goat-app .
+```
+
+To run the Docker container:
+```bash
+docker run -p 8420:8420 goat-app
+```
+
+### Environment Variables for Database Connection
+
+The application uses environment variables to connect to the database. You can set the following variables when running the application (e.g., with `docker run -e`):
+
+*   `DB_HOST`: Database host (default: `127.0.0.1`)
+*   `DB_PORT`: Database port (default: `3306`)
+*   `DB_USER`: Database username (default: `casaos`)
+*   `DB_PASSWORD`: Database password (default: `casaos`)
+*   `DB_NAME`: Database name (default: `casaos`)
+
+Example:
+```bash
+docker run -p 8420:8420 -e DB_HOST=your_database_ip -e DB_USER=your_user -e DB_PASSWORD=your_password -e DB_NAME=your_db_name goat-app
+```
+
 ## Future Features
 
-*   **Ticket Management:** Full CRUD operations for tickets, including creation, assignment, status updates, and comments.
 *   **Authentication and Authorization:** Secure user authentication and role-based access control.
 *   **Customer Management:** Expanded CRUD for customer information.
 *   **Email Notifications:** Send email notifications for ticket updates.
