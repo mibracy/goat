@@ -1,8 +1,10 @@
-# GOAT - Greatest Of All Ticketing
+# GOAT - Greatest Of All Ticketing 🐐
 
 ![img.png](img.png)
 
-GOAT is a lightweight, modular, and extensible ticketing system built with Go. It's designed to be a foundation for a robust and scalable customer support and issue tracking platform. The project is structured with a clear separation of concerns, making it easy to understand, maintain, and extend.
+🐐 is not your average ticking system. Lightweight, modular, and extensible ticketing system built with Go. 
+It's designed to be a foundation for a robust and scalable customer support and issue tracking platform. 
+The project is structured with a clear separation of concerns, making it easy to understand, maintain, and extend.
 
 
 ## Core Concepts
@@ -12,16 +14,21 @@ The system is built around the idea of providing a solid backend for a ticketing
 
 *   **User Management:** Basic CRUD operations for managing users.
     *   `GET /admin`: List all users.
+    *   `GET /admin/role/{role}`: List users by role (e.g., Admin, Agent, Customer).
     *   `POST /admin`: Create a new user.
     *   `GET /admin/{id}`: Get a user by their ID.
     *   `PUT /admin/update/{id}`: Update a user's information.
     *   `DELETE /admin/delete/{id}`: Delete a user.
 *   **Customer Management:** Basic CRUD operations for managing customers.
     *   `GET /admin/customers`: List all customers.
-*   **Ticket Management:** Basic CRUD operations for managing tickets.
+*   **Ticket Management:** CRUD operations for managing tickets.
     *   `GET /admin/tickets`: List all tickets.
-*   **Comment Management:** Basic CRUD operations for managing comments.
+    *   `POST /admin/tickets`: Create a new ticket.
+    *   `GET /admin/tickets/{id}`: Get a ticket by its ID.
+    *   `PUT /admin/tickets/{id}`: Update a ticket's information.
+*   **Comment Management:** CRUD operations for managing comments.
     *   `GET /admin/comments`: List all comments.
+    *   `POST /admin/comments`: Add a new comment to a ticket.
 
 ## How to Run
 
