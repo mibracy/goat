@@ -253,7 +253,7 @@
                 <h3>Get User by ID (GET /admin/{id})</h3>
                 <form id="getUserForm">
                     <label for="getUserId">User ID:</label>
-                    <input type="number" id="getUserId" name="id" required />
+                    <input type="text" id="getUserId" name="id" required class="js-number-input" />
                     <button type="submit">Get User</button>
                 </form>
             </div>
@@ -262,7 +262,7 @@
                 <h3>Update User (PUT /admin/update/{id})</h3>
                 <form id="updateUserForm">
                     <label for="updateUserId">User ID:</label>
-                    <input type="number" id="updateUserId" name="id" required />
+                    <input type="text" id="updateUserId" name="id" required class="js-number-input" />
                     <label for="updateName">New Name:</label>
                     <input type="text" id="updateName" name="name" required />
                     <button type="submit">Update User</button>
@@ -273,7 +273,7 @@
                 <h3>Delete User (DELETE /admin/delete/{id})</h3>
                 <form id="deleteUserForm">
                     <label for="deleteUserId">User ID:</label>
-                    <input type="number" id="deleteUserId" name="id" required />
+                    <input type="text" id="deleteUserId" name="id" required class="js-number-input" />
                     <button type="submit">Delete User</button>
                 </form>
             </div>
@@ -331,11 +331,11 @@
                         <div class="form-group-grid">
                             <div class="form-group-item">
                                 <label for="createTicketRequesterId">Requester ID:</label>
-                                <input type="number" id="createTicketRequesterId" name="requester_id" required />
+                                <input type="text" id="createTicketRequesterId" name="requester_id" required class="js-number-input" />
                             </div>
                             <div class="form-group-item">
                                 <label for="createTicketAssigneeId">Assignee ID (Optional):</label>
-                                <input type="number" id="createTicketAssigneeId" name="assignee_id" />
+                                <input type="text" id="createTicketAssigneeId" name="assignee_id" class="js-number-input" />
                             </div>
                         </div>
 
@@ -346,7 +346,7 @@
                 <div id="updateTicketSection" style="display: none;">
                     <form id="loadTicketForm">
                         <label for="updateTicketId">Ticket ID:</label>
-                        <input type="number" id="updateTicketId" name="id" required />
+                        <input type="text" id="updateTicketId" name="id" required class="js-number-input" />
                         <button type="submit">Load Ticket</button>
                     </form>
                     <form id="updateTicketForm" style="padding-top: 5px; display: none;">
@@ -385,11 +385,11 @@
                         <div class="form-group-grid">
                             <div class="form-group-item">
                                 <label for="updateTicketRequesterId">Requester ID:</label>
-                                <input type="number" id="updateTicketRequesterId" name="requester_id" required />
+                                <input type="text" id="updateTicketRequesterId" name="requester_id" required class="js-number-input" />
                             </div>
                             <div class="form-group-item">
                                 <label for="updateTicketAssigneeId">Assignee ID (Optional):</label>
-                                <input type="number" id="updateTicketAssigneeId" name="assignee_id" />
+                                <input type="text" id="updateTicketAssigneeId" name="assignee_id" class="js-number-input" />
                             </div>
                         </div>
 
@@ -417,7 +417,7 @@
                 <h3>View Ticket Details</h3>
                 <form id="loadTicketDetailsForm">
                     <label for="viewTicketId">Ticket ID:</label>
-                    <input type="number" id="viewTicketId" name="id" required />
+                    <input type="text" id="viewTicketId" name="id" required class="js-number-input" />
                     <button type="submit">Load Ticket Details</button>
                 </form>
                 <form id="ticketDetailsForm" style="padding-top: 5px; display: none;">
@@ -477,11 +477,11 @@
                     <form id="addCommentForm">
                         <div class="form-group-item">
                             <label for="addCommentTicketId">Ticket ID:</label>
-                            <input type="number" id="addCommentTicketId" name="ticket_id" required readonly />
+                            <input type="text" id="addCommentTicketId" name="ticket_id" required readonly class="js-number-input" />
                         </div>
                         <div class="form-group-item">
                             <label for="addCommentAuthorId">Author ID:</label>
-                            <input type="number" id="addCommentAuthorId" name="author_id" required />
+                            <input type="text" id="addCommentAuthorId" name="author_id" required class="js-number-input" />
                         </div>
                         <div class="form-group-item full-width-item">
                             <label for="addCommentBody">Comment:</label>
@@ -824,6 +824,25 @@
                 };
 
                 callApi("POST", `${baseUrl}/admin/comments`, commentData);
+            });
+
+            // Enforce numeric input for elements with class 'js-number-input' and handle arrow key increments/decrements
+            document.querySelectorAll('.js-number-input').forEach(inputElement => {
+                inputElement.addEventListener('input', function (event) {
+                    // Remove any non-digit characters
+                    this.value = this.value.replace(/[^0-9]/g, '');
+                });
+
+                inputElement.addEventListener('keydown', function (event) {
+                    let currentValue = parseInt(this.value) || 0;
+                    if (event.key === 'ArrowUp') {
+                        event.preventDefault(); // Prevent cursor movement
+                        this.value = currentValue + 1;
+                    } else if (event.key === 'ArrowDown') {
+                        event.preventDefault(); // Prevent cursor movement
+                        this.value = Math.max(0, currentValue - 1); // Ensure value doesn't go below 0
+                    }
+                });
             });
         </script>
     </body>
