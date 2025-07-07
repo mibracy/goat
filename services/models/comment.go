@@ -43,7 +43,7 @@ func ListComments(db *bun.DB, ctx context.Context) ([]Comment, error) {
 // ListCommentsByTicketID retrieves comments for a specific ticket from the database.
 func ListCommentsByTicketID(db *bun.DB, ctx context.Context, ticketID int64) ([]Comment, error) {
 	var comments []Comment
-	err := db.NewSelect().Model(&comments).Where("ticket_id = ?", ticketID).Scan(ctx)
+	err := db.NewSelect().Model(&comments).Where("ticket_id = ?", ticketID).Order("created_at DESC").Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

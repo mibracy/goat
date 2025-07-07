@@ -23,15 +23,24 @@ type Ticket struct {
 	CreatedAt     time.Time     `bun:"created_at,notnull,default:current_timestamp" json:"CreatedAt"`
 	UpdatedAt     time.Time     `bun:"updated_at,notnull,default:current_timestamp" json:"UpdatedAt"`
 	ClosedAt      sql.NullTime  `bun:"closed_at" json:"ClosedAt"` // Use sql.NullTime for nullable timestamp
+	Comments      []Comment     `bun:"-" json:"Comments"`         // This field is not stored in the database
 }
 
-// GetTicketByID retrieves a ticket from the database by its ID.
+// GetTicketByID retrieves a ticket from the database by its ID and also fetches related comments.
 func GetTicketByID(db *bun.DB, ctx context.Context, ticketID int64) (*Ticket, error) {
 	ticket := new(Ticket)
 	err := db.NewSelect().Model(ticket).Where("id = ?", ticketID).Scan(ctx)
 	if err != nil {
 		return nil, err
 	}
+
+	comments, err := ListCommentsByTicketID(db, ctx, ticketID)
+	if err != nil {
+		// Log the error but don't fail the ticket retrieval if comments can't be fetched
+		fmt.Printf("Error fetching comments for ticket %d: %v\n", ticketID, err)
+	}
+	ticket.Comments = comments
+
 	return ticket, nil
 }
 

@@ -226,16 +226,16 @@
                 <h3>List Users (GET /admin/) (GET /admin/role/{role})</h3>
                 <div class="button-group">
                     <form id="listUsersForm">
-                        <button type="submit">List All Users</button>
+                        <button type="submit">All</button>
                     </form>
                     <form id="listAdminsForm">
-                        <button type="submit">List All Admins</button>
+                        <button type="submit">Admins</button>
                     </form>
                     <form id="listAgentsForm">
-                        <button type="submit">List All Agents</button>
+                        <button type="submit">Agents</button>
                     </form>
                     <form id="listCustomersForm">
-                        <button type="submit">List All Customers</button>
+                        <button type="submit">Customers</button>
                     </form>
                 </div>
             </div>
@@ -312,9 +312,9 @@
                                 <label for="createTicketStatus">Status:</label>
                                 <select id="createTicketStatus" name="status">
                                     <option value="Open">Open</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Resolved">Resolved</option>
-                                    <option value="Closed">Closed</option>
+<!--                                    <option value="In Progress">In Progress</option>-->
+<!--                                    <option value="Resolved">Resolved</option>-->
+<!--                                    <option value="Closed">Closed</option>-->
                                 </select>
                             </div>
                             <div class="form-group-item">
@@ -402,8 +402,8 @@
         <div id="comments" class="model-section">
             <h2>Comments</h2>
             <div class="button-group">
-                <button onclick="showCommentSection('list')" class="active">List Comments</button>
-                <button onclick="showCommentSection('view_ticket')">View Ticket Details</button>
+                <button onclick="showCommentSection('list')" class="active">API</button>
+                <button onclick="showCommentSection('view_ticket')">Add Ticket Details</button>
             </div>
 
             <div id="listCommentsSection">
@@ -489,10 +489,31 @@
                         </div>
                         <div class="form-group-item">
                             <label for="addCommentIsInternal">Internal Only:</label>
-                            <input type="checkbox" id="addCommentIsInternal" name="is_internal" />
+                            <input type="checkbox" id="addCommentIsInternal" name="is_internal" style="max-width: 25%; min-height: 42px;" />
                         </div>
                         <button type="submit">Add Comment</button>
                     </form>
+                </div>
+
+                <div id="ticketCommentsSection" style="display: none;">
+                    <h3>Comments for this Ticket</h3>
+                    <input type="text" id="commentSearchInput" placeholder="Search comments..." style="width: 90%; margin-bottom: 10px; margin-left: 3%;" />
+                    <div style="max-height: 600px; overflow-y: auto; border: 1px solid #0F0;">
+                        <table id="ticketCommentsTable" style="width: 100%; margin-top: 10px;">
+                        <thead>
+                            <tr>
+                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">ID</th>
+                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">Author ID</th>
+                                <th style="border: 1px solid #0F0; padding: 8px; text-align: left; position: sticky; top: 0; background-color: #000; z-index: 1;">Body</th>
+                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">Internal</th>
+                                <th style="border: 1px solid #0F0; padding: 8px; text-align: left; position: sticky; top: 0; background-color: #000; z-index: 1;">Created At</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Comments will be loaded here -->
+                        </tbody>
+                        </table>
+                   </div>
                 </div>
             </div>
         </div>
@@ -742,16 +763,50 @@
                         document.getElementById("addCommentSection").style.display = 'block';
                         document.getElementById("addCommentTicketId").value = data.ID;
 
+                        // Load comments for this ticket
+                        console.log(`Fetching comments for ticket ID: ${ticketId}`);
+                        // Since comments are now part of the ticket object, we don't need a separate API call
+                        const commentsData = data.Comments;
+                        console.log("Comments Data:", commentsData);
+
+                        const commentsTableBody = document.querySelector('#ticketCommentsTable tbody');
+                        commentsTableBody.innerHTML = ''; // Clear existing comments
+                        if (commentsData && commentsData.length > 0) {
+                            commentsData.forEach(comment => {
+                                const row = commentsTableBody.insertRow();
+                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.ID}</td>`;
+                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.AuthorID}</td>`;
+                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${comment.Body}</td>`;
+                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.IsInternal ? 'Yes' : 'No'}</td>`;
+                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${new Date(comment.CreatedAt).toLocaleString()}</td>`;
+                            });
+                            document.getElementById("ticketCommentsSection").style.display = 'block';
+                        } else {
+                            commentsTableBody.innerHTML = '<tr><td colspan="5" style="border: 1px solid #0F0;">No comments found for this ticket.</td></tr>';
+                            document.getElementById("ticketCommentsSection").style.display = 'block';
+                        }
+
                     } else {
                         apiResponse.textContent = `Error: ${data}`;
                         document.getElementById("ticketDetailsForm").style.display = 'none';
                         document.getElementById("addCommentSection").style.display = 'none'; // Hide add comment section on error
+                        document.getElementById("ticketCommentsSection").style.display = 'none'; // Hide comments section on error
                     }
                 } catch (error) {
                     apiResponse.textContent = "Error: " + error.message;
                     console.error("API Call Error:", error);
                     document.getElementById("ticketDetailsForm").style.display = 'none';
                 }
+            });
+
+            document.getElementById("commentSearchInput").addEventListener("keyup", function() {
+                console.log("Search input changed:", this.value);
+                const filter = this.value.toLowerCase();
+                const rows = document.querySelectorAll('#ticketCommentsTable tbody tr');
+                rows.forEach(row => {
+                    const text = row.textContent.toLowerCase();
+                    row.style.display = text.includes(filter) ? "" : "none";
+                });
             });
 
             document.getElementById("addCommentForm").addEventListener("submit", (e) => {
