@@ -432,16 +432,11 @@
         <div id="comments" class="model-section">
             <h2>Comments</h2>
             <div class="button-group">
-                <button onclick="showCommentSection('list')" class="active">API</button>
+                <button onclick="callApi('GET', `${baseUrl}/admin/comments`)" class="active">API</button>
                 <button onclick="showCommentSection('view_ticket')">Add Ticket Details</button>
             </div>
 
-            <div id="listCommentsSection">
-                <h3>List Comments (GET /admin/comments)</h3>
-                <form id="listCommentsForm">
-                    <button type="submit">List All Comments</button>
-                </form>
-            </div>
+            
 
             <div id="viewTicketDetailsSection" style="display: none;">
                 <h3>View Ticket Details</h3>
@@ -744,7 +739,6 @@
 
             // Comment Forms
             function showCommentSection(sectionType) {
-                document.getElementById('listCommentsSection').style.display = 'none';
                 document.getElementById('viewTicketDetailsSection').style.display = 'none';
                 // document.getElementById('addCommentSection').style.display = 'none'; // This section is now inside viewTicketDetailsSection
                 document.getElementById('ticketDetailsForm').style.display = 'none'; // Hide ticket details form initially
@@ -754,7 +748,7 @@
                 });
 
                 if (sectionType === 'list') {
-                    document.getElementById('listCommentsSection').style.display = 'block';
+                    callApi("GET", `${baseUrl}/admin/comments`);
                     document.querySelector('#comments .button-group button:nth-child(1)').classList.add('active');
                 } else if (sectionType === 'view_ticket') {
                     document.getElementById('viewTicketDetailsSection').style.display = 'block';
@@ -766,10 +760,7 @@
             // Initial display for comment forms
             showCommentSection('list');
 
-            document.getElementById("listCommentsForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/comments`);
-            });
+            
 
             document.getElementById("loadTicketDetailsForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
@@ -843,7 +834,7 @@
                 });
             });
 
-            document.getElementById("addCommentForm").addEventListener("submit", (e) => {
+            document.getElementById("addCommentForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
                 const ticketId = parseInt(document.getElementById("addCommentTicketId").value);
                 const authorId = parseInt(document.getElementById("addCommentAuthorId").value);
@@ -857,7 +848,10 @@
                     IsInternal: isInternal,
                 };
 
-                callApi("POST", `${baseUrl}/admin/comments`, commentData);
+                await callApi("POST", `${baseUrl}/admin/comments`, commentData);
+
+                // Repoll the ticket data to refresh the comments table
+                document.getElementById("loadTicketDetailsForm").requestSubmit();
             });
 
             // Enforce numeric input for elements with class 'js-number-input' and handle arrow key increments/decrements

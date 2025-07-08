@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"net/http"
 	"strconv"
 
@@ -57,10 +58,23 @@ func (h *CommentHandler) CreateComment(w http.ResponseWriter, r *http.Request) {
 
 	comment := models.Comment{
 		TicketID:   req.TicketID,
-		AuthorID:   req.AuthorID,
 		Body:       req.Body,
 		IsInternal: req.IsInternal,
 	}
+
+	// Check if the author exists
+	author, err := models.GetUserByID(h.db, ctx, req.AuthorID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Author not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	comment.AuthorID = author.ID
 
 	if err := models.CreateComment(h.db, ctx, &comment); err != nil {
 		render.Status(r, http.StatusInternalServerError)

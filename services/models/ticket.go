@@ -22,8 +22,8 @@ type Ticket struct {
 	AssigneeID    sql.NullInt64 `bun:"assignee_id"` // Use sql.NullInt64 for nullable foreign key
 	CreatedAt     time.Time     `bun:"created_at,notnull,default:current_timestamp" json:"CreatedAt"`
 	UpdatedAt     time.Time     `bun:"updated_at,notnull,default:current_timestamp" json:"UpdatedAt"`
-	ClosedAt      sql.NullTime  `bun:"closed_at" json:"ClosedAt"` // Use sql.NullTime for nullable timestamp
-	Comments      []Comment     `bun:"-" json:"Comments"`         // This field is not stored in the database
+	ClosedAt      sql.NullTime  `bun:"closed_at" json:"ClosedAt"`   // Use sql.NullTime for nullable timestamp
+	Comments      []Comment     `bun:"-" json:"Comments,omitempty"` // This field is not stored in the database
 }
 
 // GetTicketByID retrieves a ticket from the database by its ID and also fetches related comments.
@@ -68,7 +68,26 @@ func CreateTicket(db *bun.DB, ctx context.Context, ticket *Ticket) error {
 
 // UpdateTicket updates an existing ticket in the database.
 func UpdateTicket(db *bun.DB, ctx context.Context, ticket *Ticket) error {
-	_, err := db.NewUpdate().Model(ticket).Where("id = ? ", ticket.ID).Exec(ctx)
+
+	// Preserve the original CreatedAt time.
+	existingTicket, err := GetTicketByID(db, ctx, ticket.ID)
+	if err != nil {
+		return err
+	}
+	ticket.CreatedAt = existingTicket.CreatedAt
+
+	ticket.UpdatedAt = time.Now()
+	if ticket.Status == "Closed" {
+		ticket.ClosedAt = sql.NullTime{Time: time.Now(), Valid: true}
+	} else {
+		ticket.ClosedAt = sql.NullTime{Valid: false}
+	}
+
+	_, err = db.NewUpdate().
+		Model(ticket).
+		Column("title", "description", "status", "priority", "requester_id", "assignee_id", "updated_at", "closed_at").
+		Where("id = ?", ticket.ID).
+		Exec(ctx)
 	return err
 }
 

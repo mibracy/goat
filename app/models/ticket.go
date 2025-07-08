@@ -61,11 +61,36 @@ func (h *TicketHandler) CreateTicket(w http.ResponseWriter, r *http.Request) {
 		Description: req.Description,
 		Status:      req.Status,
 		Priority:    req.Priority,
-		RequesterID: req.RequesterID,
 	}
 
+	// Check if the requester exists
+	requester, err := models.GetUserByID(h.db, ctx, req.RequesterID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Requester not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	ticket.RequesterID = requester.ID
+
 	if req.AssigneeID != nil {
-		ticket.AssigneeID = sql.NullInt64{Int64: *req.AssigneeID, Valid: true}
+		// Check if the assignee exists
+		assignee, err := models.GetUserByID(h.db, ctx, *req.AssigneeID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				render.Status(r, http.StatusNotFound)
+				renderer.PrettyJSON(w, r, "Assignee not found")
+				return
+			}
+			render.Status(r, http.StatusInternalServerError)
+			renderer.PrettyJSON(w, r, err.Error())
+			return
+		}
+		ticket.AssigneeID = sql.NullInt64{Int64: assignee.ID, Valid: true}
 	} else {
 		ticket.AssigneeID = sql.NullInt64{Valid: false}
 	}
@@ -139,11 +164,36 @@ func (h *TicketHandler) UpdateTicket(w http.ResponseWriter, r *http.Request) {
 		Description: req.Description,
 		Status:      req.Status,
 		Priority:    req.Priority,
-		RequesterID: req.RequesterID,
 	}
 
+	// Check if the requester exists
+	requester, err := models.GetUserByID(h.db, ctx, req.RequesterID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Requester not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	ticket.RequesterID = requester.ID
+
 	if req.AssigneeID != nil {
-		ticket.AssigneeID = sql.NullInt64{Int64: *req.AssigneeID, Valid: true}
+		// Check if the assignee exists
+		assignee, err := models.GetUserByID(h.db, ctx, *req.AssigneeID)
+		if err != nil {
+			if err == sql.ErrNoRows {
+				render.Status(r, http.StatusNotFound)
+				renderer.PrettyJSON(w, r, "Assignee not found")
+				return
+			}
+			render.Status(r, http.StatusInternalServerError)
+			renderer.PrettyJSON(w, r, err.Error())
+			return
+		}
+		ticket.AssigneeID = sql.NullInt64{Int64: assignee.ID, Valid: true}
 	} else {
 		ticket.AssigneeID = sql.NullInt64{Valid: false}
 	}
