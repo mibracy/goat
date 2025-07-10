@@ -7,19 +7,31 @@
         <style>
             body {
                 background-color: #000;
-                color: #0F0;
-                font-family: 'Courier New', Courier, monospace;
+                color: #0f0;
+                font-family: "Courier New", Courier, monospace;
                 margin: 20px;
             }
             @keyframes pulse {
                 0% {
-                    text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                    text-shadow:
+                        0 0 5px #0f0,
+                        0 0 10px #0f0,
+                        0 0 15px #0f0,
+                        0 0 20px #0f0;
                 }
                 50% {
-                    text-shadow: 0 0 10px #0F0, 0 0 20px #0F0, 0 0 30px #0F0, 0 0 40px #0F0;
+                    text-shadow:
+                        0 0 10px #0f0,
+                        0 0 20px #0f0,
+                        0 0 30px #0f0,
+                        0 0 40px #0f0;
                 }
                 100% {
-                    text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                    text-shadow:
+                        0 0 5px #0f0,
+                        0 0 10px #0f0,
+                        0 0 15px #0f0,
+                        0 0 20px #0f0;
                 }
             }
 
@@ -29,22 +41,27 @@
                 letter-spacing: 5px;
                 animation: pulse 4.2s infinite alternate; /* Apply the pulse animation */
             }
-            h1:hover, h2:hover {
-                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+            h1:hover,
+            h2:hover {
+                text-shadow:
+                    0 0 5px #0f0,
+                    0 0 10px #0f0,
+                    0 0 15px #0f0,
+                    0 0 20px #0f0;
             }
             .menu {
                 text-align: center;
             }
             .menu button {
                 background-color: #222;
-                color: #0F0;
-                border: 1px solid #0F0;
+                color: #0f0;
+                border: 1px solid #0f0;
                 padding: 10px 15px;
                 cursor: pointer;
                 text-transform: uppercase;
             }
             .menu button.active {
-                background-color: #0F0;
+                background-color: #0f0;
                 color: #000;
             }
             .model-section {
@@ -53,14 +70,21 @@
             .model-section.active {
                 display: block;
             }
+            .admin-sub-section {
+                display: none;
+            }
+            .admin-sub-section.active {
+                display: block;
+            }
             div {
-                border: 1px solid #0F0;
+                border: 1px solid #0f0;
                 border-radius: 0;
                 margin-bottom: 20px;
                 padding: 15px;
             }
-            h2, h3 {
-                color: #0F0;
+            h2,
+            h3 {
+                color: #0f0;
                 text-transform: uppercase;
                 transition: text-shadow 0.3s ease-in-out;
             }
@@ -70,21 +94,22 @@
             }
             input[type="text"],
             input[type="number"],
+            input[type="password"],
             select,
             textarea {
                 background-color: #222;
-                color: #0F0;
-                border: 1px solid #0F0;
+                color: #0f0;
+                border: 1px solid #0f0;
                 padding: 8px;
                 width: 200px; /* Default width, overridden by grid */
                 margin-bottom: 0; /* Removed margin-bottom, using grid gap */
                 -webkit-appearance: none; /* Remove default dropdown arrow for better styling */
                 -moz-appearance: none;
                 appearance: none;
-                background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%230F0%22%20d%3D%22M2%200L0%202h4zm0%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+                background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%230F0%22%20d%3D%22M2%200L0%202h4zm0%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E"); /* Custom arrow */
                 background-repeat: no-repeat;
-                background-position: right .7em top 50%;
-                background-size: .65em auto;
+                background-position: right 0.7em top 50%;
+                background-size: 0.65em auto;
             }
 
             input[type="checkbox"] {
@@ -94,7 +119,7 @@
                 display: inline-block;
                 width: 16px;
                 height: 16px;
-                border: 1px solid #0F0;
+                border: 1px solid #0f0;
                 background-color: #222;
                 vertical-align: middle;
                 position: relative;
@@ -102,11 +127,11 @@
             }
 
             input[type="checkbox"]:checked {
-                background-color: #0F0;
+                background-color: #0f0;
             }
 
             input[type="checkbox"]:checked::after {
-                content: '\2713'; /* Checkmark character */
+                content: "\2713"; /* Checkmark character */
                 color: #000;
                 font-size: 12px;
                 position: absolute;
@@ -142,7 +167,8 @@
             }
 
             /* Specific width for title input */
-            #createTicketForm .form-group-item:nth-child(1) { /* Targeting the title form-group-item */
+            #createTicketForm .form-group-item:nth-child(1) {
+                /* Targeting the title form-group-item */
                 grid-template-columns: 150px 40%; /* Label 150px, input 40% of the row */
             }
 
@@ -158,7 +184,10 @@
 
             .form-group-grid {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr); /* Two columns for status/priority and requester/assignee */
+                grid-template-columns: repeat(
+                    2,
+                    1fr
+                ); /* Two columns for status/priority and requester/assignee */
                 gap: 10px;
             }
 
@@ -166,7 +195,7 @@
                 margin-bottom: 0; /* Remove margin as gap handles it */
             }
             button {
-                background-color: #0F0;
+                background-color: #0f0;
                 color: #000;
                 border: none;
                 padding: 10px 15px;
@@ -175,8 +204,12 @@
                 transition: text-shadow 0.3s ease-in-out;
             }
             button:hover {
-                background-color: #0A0;
-                text-shadow: 0 0 5px #0F0, 0 0 10px #0F0, 0 0 15px #0F0, 0 0 20px #0F0;
+                background-color: #0a0;
+                text-shadow:
+                    0 0 5px #0f0,
+                    0 0 10px #0f0,
+                    0 0 15px #0f0,
+                    0 0 20px #0f0;
             }
             .button-group {
                 display: flex;
@@ -195,7 +228,7 @@
             }
             pre {
                 background-color: #111;
-                border: 1px dashed #0F0;
+                border: 1px dashed #0f0;
                 padding: 10px;
                 overflow-x: auto;
                 white-space: pre-wrap;
@@ -205,7 +238,7 @@
             #response-container {
                 max-height: 50vh;
                 overflow-y: auto;
-                border: 1px solid #0F0;
+                border: 1px solid #0f0;
                 padding: 10px;
                 margin-top: 20px;
             }
@@ -215,14 +248,147 @@
         <h1>GOAT API Viewer</h1>
 
         <div class="menu">
-            <button onclick="showModel('users')" class="active">Users</button>
-            <button onclick="showModel('tickets')">Tickets</button>
-            <button onclick="showModel('comments')">Comments</button>
+            <button onclick="showModel('login')" class="active">Login</button>
+            <button onclick="showModel('admin')">Admin</button>
+            <button onclick="showModel('agent')">Agent</button>
+            <button onclick="showModel('customer')">Customer</button>
         </div>
 
-        <div id="users" class="model-section active">
-            <h2>Users</h2>
-            <div>
+        <div id="login" class="model-section active">
+            <h2>Login / Register</h2>
+
+            <div class="menu">
+                <button onclick="showLoginSection('register-customer')">
+                    Register
+                </button>
+                <button
+                    onclick="showLoginSection('authenticate')"
+                    class="active"
+                >
+                    Login
+                </button>
+                <button onclick="showLoginSection('clear-jwt')">Logout</button>
+                <button onclick="showLoginSection('forgot-password')">
+                    Forgot Password
+                </button>
+            </div>
+
+            <div id="login-authenticate" class="login-sub-section active">
+                <h3>Authenticate (POST /login)</h3>
+                <form id="loginForm">
+                    <div class="form-group-item">
+                        <label for="loginEmail">Email:</label>
+                        <input
+                            type="text"
+                            id="loginEmail"
+                            name="email"
+                            required
+                        />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="loginPassword">Password:</label>
+                        <input
+                            type="password"
+                            id="loginPassword"
+                            name="password"
+                            required
+                        />
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <div id="login-register-customer" class="login-sub-section">
+                <h3>Register New Customer (POST /register)</h3>
+                <form id="registerCustomerForm">
+                    <div class="form-group-item">
+                        <label for="registerCustomerName">Name:</label>
+                        <input
+                            type="text"
+                            id="registerCustomerName"
+                            name="name"
+                            required
+                        />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="registerCustomerEmail">Email:</label>
+                        <input
+                            type="text"
+                            id="registerCustomerEmail"
+                            name="email"
+                            required
+                        />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="registerCustomerPassword">Password:</label>
+                        <input
+                            type="password"
+                            id="registerCustomerPassword"
+                            name="password"
+                            required
+                        />
+                    </div>
+                    <button type="submit">Register Customer</button>
+                </form>
+            </div>
+
+            <div id="login-clear-jwt" class="login-sub-section">
+                <h3>Current JWT:</h3>
+                <pre id="currentJwt"></pre>
+                <button onclick="clearJwt()">Clear JWT</button>
+            </div>
+
+            <div id="login-forgot-password" class="login-sub-section">
+                <h3>Forgot Password (POST /forgot-password)</h3>
+                <form id="forgotPasswordForm">
+                    <div class="form-group-item">
+                        <label for="forgotPasswordEmail">Email:</label>
+                        <input
+                            type="text"
+                            id="forgotPasswordEmail"
+                            name="email"
+                            required
+                        />
+                    </div>
+                    <button type="submit">Request Reset</button>
+                </form>
+
+                <h3>Reset Password (POST /reset-password)</h3>
+                <form id="resetPasswordForm">
+                    <div class="form-group-item">
+                        <label for="resetToken">Token:</label>
+                        <input
+                            type="text"
+                            id="resetToken"
+                            name="token"
+                            required
+                        />
+                    </div>
+                    <div class="form-group-item">
+                        <label for="newPassword">New Password:</label>
+                        <input
+                            type="password"
+                            id="newPassword"
+                            name="new_password"
+                            required
+                        />
+                    </div>
+                    <button type="submit">Reset Password</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="admin" class="model-section">
+            <h2>Admin</h2>
+            <div class="menu">
+                <button onclick="showAdminSection('users')" class="active">
+                    Users
+                </button>
+                <button onclick="showAdminSection('tickets')">Tickets</button>
+                <button onclick="showAdminSection('comments')">Comments</button>
+            </div>
+
+            <div id="admin-users" class="admin-sub-section active">
                 <h3>List Users (GET /admin/) (GET /admin/role/{role})</h3>
                 <div class="button-group">
                     <form id="listUsersForm">
@@ -238,308 +404,794 @@
                         <button type="submit">Customers</button>
                     </form>
                 </div>
+
+                <div id="admin-create-user" class="disabled-admin-sub-section">
+                    <h3>Create User (POST /admin/)</h3>
+                    <form id="createUserForm">
+                        <div class="form-group-item">
+                            <label for="createName">Name:</label>
+                            <input
+                                type="text"
+                                id="createName"
+                                name="name"
+                                required
+                            />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="createEmail">Email:</label>
+                            <input
+                                type="text"
+                                id="createEmail"
+                                name="email"
+                                required
+                            />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="createRole">Role:</label>
+                            <select id="createRole" name="role">
+                                <option value="Customer">Customer</option>
+                                <option value="Agent">Agent</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit">Create User</button>
+                    </form>
+                </div>
+
+                <div id="admin-get-user" class="disabled-admin-sub-section">
+                    <h3>Get User by ID (GET /admin/{id})</h3>
+                    <form id="getUserForm">
+                        <label for="getUserId">User ID:</label>
+                        <input
+                            type="text"
+                            id="getUserId"
+                            name="id"
+                            required
+                            class="js-number-input"
+                        />
+                        <button type="submit">Get User</button>
+                    </form>
+                </div>
+
+                <div id="admin-update-user" class="disabled-admin-sub-section">
+                    <h3>Update User (PUT /admin/update/{id})</h3>
+                    <form id="updateUserForm">
+                        <div class="form-group-item">
+                            <label for="updateUserId">User ID:</label>
+                            <input
+                                type="text"
+                                id="updateUserId"
+                                name="id"
+                                required
+                                class="js-number-input"
+                            />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="updateName">New Name:</label>
+                            <input
+                                type="text"
+                                id="updateName"
+                                name="name"
+                                required
+                            />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="updateEmail">New Email:</label>
+                            <input
+                                type="text"
+                                id="updateEmail"
+                                name="email"
+                                required
+                            />
+                        </div>
+                        <div class="form-group-item">
+                            <label for="updateRole">New Role:</label>
+                            <select id="updateRole" name="role">
+                                <option value="Customer">Customer</option>
+                                <option value="Agent">Agent</option>
+                                <option value="Admin">Admin</option>
+                            </select>
+                        </div>
+                        <button type="submit">Update User</button>
+                    </form>
+                </div>
+
+                <div id="admin-delete-user" class="disabled-admin-sub-section">
+                    <h3>Delete User (DELETE /admin/delete/{id})</h3>
+                    <form id="deleteUserForm">
+                        <label for="deleteUserId">User ID:</label>
+                        <input
+                            type="text"
+                            id="deleteUserId"
+                            name="id"
+                            required
+                            class="js-number-input"
+                        />
+                        <button type="submit">Delete User</button>
+                    </form>
+                </div>
             </div>
 
-            <div>
-                <h3>Create User (POST /admin/)</h3>
-                <form id="createUserForm">
-                    <div class="form-group-item">
-                        <label for="createName">Name:</label>
-                        <input type="text" id="createName" name="name" required />
+            <div id="admin-tickets" class="admin-sub-section">
+                <h2>Tickets</h2>
+                <div>
+                    <h3>List Tickets (GET /admin/tickets)</h3>
+                    <form id="listTicketsForm">
+                        <button type="submit">List All Tickets</button>
+                    </form>
+                </div>
+
+                <div>
+                    <h3>Create/Update Ticket</h3>
+                    <div class="button-group">
+                        <button
+                            onclick="showTicketForm('create')"
+                            class="active"
+                        >
+                            Create Ticket
+                        </button>
+                        <button onclick="showTicketForm('update')">
+                            Update Ticket
+                        </button>
                     </div>
-                    <div class="form-group-item">
-                        <label for="createEmail">Email:</label>
-                        <input type="text" id="createEmail" name="email" required />
+
+                    <div id="createTicketSection">
+                        <form id="createTicketForm">
+                            <div class="form-group-item">
+                                <label for="createTicketTitle">Title:</label>
+                                <input
+                                    type="text"
+                                    id="createTicketTitle"
+                                    name="title"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-group-item full-width-item">
+                                <label for="createTicketDescription"
+                                    >Description:</label
+                                >
+                                <textarea
+                                    id="createTicketDescription"
+                                    name="description"
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group-grid">
+                                <div class="form-group-item">
+                                    <label for="createTicketStatus"
+                                        >Status:</label
+                                    >
+                                    <select
+                                        id="createTicketStatus"
+                                        name="status"
+                                    >
+                                        <option value="Open">Open</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-item">
+                                    <label for="createTicketPriority"
+                                        >Priority:</label
+                                    >
+                                    <select
+                                        id="createTicketPriority"
+                                        name="priority"
+                                    >
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group-grid">
+                                <div class="form-group-item">
+                                    <label for="createTicketRequesterId"
+                                        >Requester ID:</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="createTicketRequesterId"
+                                        name="requester_id"
+                                        required
+                                        class="js-number-input"
+                                    />
+                                </div>
+                                <div class="form-group-item">
+                                    <label for="createTicketAssigneeId"
+                                        >Assignee ID (Optional):</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="createTicketAssigneeId"
+                                        name="assignee_id"
+                                        class="js-number-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <button type="submit">Create Ticket</button>
+                        </form>
                     </div>
-                    <div class="form-group-item">
-                        <label for="createRole">Role:</label>
-                        <select id="createRole" name="role">
-                            <option value="Customer">Customer</option>
-                            <option value="Agent">Agent</option>
-                            <option value="Admin">Admin</option>
-                        </select>
+
+                    <div id="updateTicketSection" style="display: none">
+                        <form id="loadTicketForm">
+                            <label for="updateTicketId">Ticket ID:</label>
+                            <input
+                                type="text"
+                                id="updateTicketId"
+                                name="id"
+                                required
+                                class="js-number-input"
+                            />
+                            <button type="submit">Load Ticket</button>
+                        </form>
+                        <form
+                            id="updateTicketForm"
+                            style="padding-top: 5px; display: none"
+                        >
+                            <input
+                                type="hidden"
+                                id="hiddenUpdateTicketId"
+                                name="id"
+                            />
+                            <div class="form-group-item">
+                                <label for="updateTicketTitle">Title:</label>
+                                <input
+                                    type="text"
+                                    id="updateTicketTitle"
+                                    name="title"
+                                    required
+                                />
+                            </div>
+
+                            <div class="form-group-item full-width-item">
+                                <label for="updateTicketDescription"
+                                    >Description:</label
+                                >
+                                <textarea
+                                    id="updateTicketDescription"
+                                    name="description"
+                                ></textarea>
+                            </div>
+
+                            <div class="form-group-grid">
+                                <div class="form-group-item">
+                                    <label for="updateTicketStatus"
+                                        >Status:</label
+                                    >
+                                    <select
+                                        id="updateTicketStatus"
+                                        name="status"
+                                    >
+                                        <option value="Open">Open</option>
+                                        <option value="In Progress">
+                                            In Progress
+                                        </option>
+                                        <option value="Resolved">
+                                            Resolved
+                                        </option>
+                                        <option value="Closed">Closed</option>
+                                    </select>
+                                </div>
+                                <div class="form-group-item">
+                                    <label for="updateTicketPriority"
+                                        >Priority:</label
+                                    >
+                                    <select
+                                        id="updateTicketPriority"
+                                        name="priority"
+                                    >
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Urgent">Urgent</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group-grid">
+                                <div class="form-group-item">
+                                    <label for="updateTicketRequesterId"
+                                        >Requester ID:</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="updateTicketRequesterId"
+                                        name="requester_id"
+                                        required
+                                        class="js-number-input"
+                                    />
+                                </div>
+                                <div class="form-group-item">
+                                    <label for="updateTicketAssigneeId"
+                                        >Assignee ID (Optional):</label
+                                    >
+                                    <input
+                                        type="text"
+                                        id="updateTicketAssigneeId"
+                                        name="assignee_id"
+                                        class="js-number-input"
+                                    />
+                                </div>
+                            </div>
+
+                            <button type="submit">Update Ticket</button>
+                        </form>
                     </div>
-                    <button type="submit">Create User</button>
-                </form>
+                </div>
             </div>
 
-            <div>
-                <h3>Get User by ID (GET /admin/{id})</h3>
-                <form id="getUserForm">
-                    <label for="getUserId">User ID:</label>
-                    <input type="text" id="getUserId" name="id" required class="js-number-input" />
-                    <button type="submit">Get User</button>
-                </form>
-            </div>
-
-            <div>
-                <h3>Update User (PUT /admin/update/{id})</h3>
-                <form id="updateUserForm">
-                    <div class="form-group-item">
-                        <label for="updateUserId">User ID:</label>
-                        <input type="text" id="updateUserId" name="id" required class="js-number-input" />
-                    </div>
-                    <div class="form-group-item">
-                        <label for="updateName">New Name:</label>
-                        <input type="text" id="updateName" name="name" required />
-                    </div>
-                    <div class="form-group-item">
-                        <label for="updateEmail">New Email:</label>
-                        <input type="text" id="updateEmail" name="email" required />
-                    </div>
-                    <div class="form-group-item">
-                        <label for="updateRole">New Role:</label>
-                        <select id="updateRole" name="role">
-                            <option value="Customer">Customer</option>
-                            <option value="Agent">Agent</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <button type="submit">Update User</button>
-                </form>
-            </div>
-
-            <div>
-                <h3>Delete User (DELETE /admin/delete/{id})</h3>
-                <form id="deleteUserForm">
-                    <label for="deleteUserId">User ID:</label>
-                    <input type="text" id="deleteUserId" name="id" required class="js-number-input" />
-                    <button type="submit">Delete User</button>
-                </form>
-            </div>
-        </div>
-
-        <div id="tickets" class="model-section">
-            <h2>Tickets</h2>
-            <div>
-                <h3>List Tickets (GET /admin/tickets)</h3>
-                <form id="listTicketsForm">
-                    <button type="submit">List All Tickets</button>
-                </form>
-            </div>
-
-            <div>
-                <h3>Create/Update Ticket</h3>
+            <div id="admin-comments" class="admin-sub-section">
+                <h2>Comments</h2>
                 <div class="button-group">
-                    <button onclick="showTicketForm('create')" class="active">Create Ticket</button>
-                    <button onclick="showTicketForm('update')">Update Ticket</button>
+                    <button
+                        onclick="callApi('GET', `${baseUrl}/admin/comments`)"
+                        class="active"
+                    >
+                        List All Comments
+                    </button>
+                    <button onclick="showCommentSection('view_ticket')">
+                        Add Ticket Details
+                    </button>
                 </div>
 
-                <div id="createTicketSection">
-                    <form id="createTicketForm">
+                <div id="viewTicketDetailsSection">
+                    <h3>View Ticket Details</h3>
+                    <form id="loadTicketDetailsForm">
+                        <label for="viewTicketId">Ticket ID:</label>
+                        <input
+                            type="text"
+                            id="viewTicketId"
+                            name="id"
+                            required
+                            class="js-number-input"
+                        />
+                        <button type="submit">Load Ticket Details</button>
+                    </form>
+                    <form
+                        id="ticketDetailsForm"
+                        style="padding-top: 5px; display: none"
+                    >
                         <div class="form-group-item">
-                            <label for="createTicketTitle">Title:</label>
-                            <input type="text" id="createTicketTitle" name="title" required />
+                            <label>ID:</label>
+                            <input type="text" id="detailTicketId" readonly />
                         </div>
-
-                        <div class="form-group-item full-width-item">
-                            <label for="createTicketDescription">Description:</label>
-                            <textarea id="createTicketDescription" name="description"></textarea>
-                        </div>
-
-                        <div class="form-group-grid">
-                            <div class="form-group-item">
-                                <label for="createTicketStatus">Status:</label>
-                                <select id="createTicketStatus" name="status">
-                                    <option value="Open">Open</option>
-<!--                                    <option value="In Progress">In Progress</option>-->
-<!--                                    <option value="Resolved">Resolved</option>-->
-<!--                                    <option value="Closed">Closed</option>-->
-                                </select>
-                            </div>
-                            <div class="form-group-item">
-                                <label for="createTicketPriority">Priority:</label>
-                                <select id="createTicketPriority" name="priority">
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Urgent">Urgent</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group-grid">
-                            <div class="form-group-item">
-                                <label for="createTicketRequesterId">Requester ID:</label>
-                                <input type="text" id="createTicketRequesterId" name="requester_id" required class="js-number-input" />
-                            </div>
-                            <div class="form-group-item">
-                                <label for="createTicketAssigneeId">Assignee ID (Optional):</label>
-                                <input type="text" id="createTicketAssigneeId" name="assignee_id" class="js-number-input" />
-                            </div>
-                        </div>
-
-                        <button type="submit">Create Ticket</button>
-                    </form>
-                </div>
-
-                <div id="updateTicketSection" style="display: none;">
-                    <form id="loadTicketForm">
-                        <label for="updateTicketId">Ticket ID:</label>
-                        <input type="text" id="updateTicketId" name="id" required class="js-number-input" />
-                        <button type="submit">Load Ticket</button>
-                    </form>
-                    <form id="updateTicketForm" style="padding-top: 5px; display: none;">
-                        <input type="hidden" id="hiddenUpdateTicketId" name="id" />
                         <div class="form-group-item">
-                            <label for="updateTicketTitle">Title:</label>
-                            <input type="text" id="updateTicketTitle" name="title" required />
+                            <label>Title:</label>
+                            <input
+                                type="text"
+                                id="detailTicketTitle"
+                                readonly
+                            />
                         </div>
-
                         <div class="form-group-item full-width-item">
-                            <label for="updateTicketDescription">Description:</label>
-                            <textarea id="updateTicketDescription" name="description"></textarea>
+                            <label>Description:</label>
+                            <textarea
+                                id="detailTicketDescription"
+                                readonly
+                            ></textarea>
                         </div>
 
                         <div class="form-group-grid">
                             <div class="form-group-item">
-                                <label for="updateTicketStatus">Status:</label>
-                                <select id="updateTicketStatus" name="status">
-                                    <option value="Open">Open</option>
-                                    <option value="In Progress">In Progress</option>
-                                    <option value="Resolved">Resolved</option>
-                                    <option value="Closed">Closed</option>
-                                </select>
+                                <label>Status:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketStatus"
+                                    readonly
+                                />
                             </div>
                             <div class="form-group-item">
-                                <label for="updateTicketPriority">Priority:</label>
-                                <select id="updateTicketPriority" name="priority">
-                                    <option value="Low">Low</option>
-                                    <option value="Medium">Medium</option>
-                                    <option value="High">High</option>
-                                    <option value="Urgent">Urgent</option>
-                                </select>
+                                <label>Priority:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketPriority"
+                                    readonly
+                                />
                             </div>
                         </div>
 
                         <div class="form-group-grid">
                             <div class="form-group-item">
-                                <label for="updateTicketRequesterId">Requester ID:</label>
-                                <input type="text" id="updateTicketRequesterId" name="requester_id" required class="js-number-input" />
+                                <label>Requester ID:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketRequesterId"
+                                    readonly
+                                />
                             </div>
                             <div class="form-group-item">
-                                <label for="updateTicketAssigneeId">Assignee ID (Optional):</label>
-                                <input type="text" id="updateTicketAssigneeId" name="assignee_id" class="js-number-input" />
+                                <label>Assignee ID:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketAssigneeId"
+                                    readonly
+                                />
                             </div>
                         </div>
 
-                        <button type="submit">Update Ticket</button>
+                        <div class="form-group-grid">
+                            <div class="form-group-item">
+                                <label>Created At:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketCreatedAt"
+                                    readonly
+                                />
+                            </div>
+                            <div class="form-group-item">
+                                <label>Updated At:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketUpdatedAt"
+                                    readonly
+                                />
+                            </div>
+                            <div class="form-group-item">
+                                <label>Closed At:</label>
+                                <input
+                                    type="text"
+                                    id="detailTicketClosedAt"
+                                    readonly
+                                />
+                            </div>
+                        </div>
                     </form>
+
+                    <div id="addCommentSection">
+                        <h3>Add New Comment</h3>
+                        <form id="addCommentForm">
+                            <div class="form-group-item">
+                                <label for="addCommentTicketId"
+                                    >Ticket ID:</label
+                                >
+                                <input
+                                    type="text"
+                                    id="addCommentTicketId"
+                                    name="ticket_id"
+                                    required
+                                    readonly
+                                    class="js-number-input"
+                                />
+                            </div>
+                            <div class="form-group-item">
+                                <label for="addCommentAuthorId"
+                                    >Author ID:</label
+                                >
+                                <input
+                                    type="text"
+                                    id="addCommentAuthorId"
+                                    name="author_id"
+                                    required
+                                    class="js-number-input"
+                                />
+                            </div>
+                            <div class="form-group-item full-width-item">
+                                <label for="addCommentBody">Comment:</label>
+                                <textarea
+                                    id="addCommentBody"
+                                    name="body"
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="form-group-item">
+                                <label for="addCommentIsInternal"
+                                    >Internal Only:</label
+                                >
+                                <input
+                                    type="checkbox"
+                                    id="addCommentIsInternal"
+                                    name="is_internal"
+                                    style="max-width: 25%; min-height: 42px"
+                                />
+                            </div>
+                            <button type="submit">Add Comment</button>
+                        </form>
+                    </div>
+
+                    <div id="ticketCommentsSection">
+                        <h3>Comments for this Ticket</h3>
+                        <input
+                            type="text"
+                            id="commentSearchInput"
+                            placeholder="Search comments..."
+                            style="
+                                width: 90%;
+                                margin-bottom: 10px;
+                                margin-left: 3%;
+                            "
+                        />
+                        <div
+                            style="
+                                max-height: 600px;
+                                overflow-y: auto;
+                                border: 1px solid #0f0;
+                            "
+                        >
+                            <table
+                                id="ticketCommentsTable"
+                                style="width: 100%; margin-top: 10px"
+                            >
+                                <thead>
+                                    <tr>
+                                        <th
+                                            style="
+                                                border: 1px solid #0f0;
+                                                padding: 8px;
+                                                text-align: center;
+                                                position: sticky;
+                                                top: 0;
+                                                background-color: #000;
+                                                z-index: 1;
+                                            "
+                                        >
+                                            ID
+                                        </th>
+                                        <th
+                                            style="
+                                                border: 1px solid #0f0;
+                                                padding: 8px;
+                                                text-align: center;
+                                                position: sticky;
+                                                top: 0;
+                                                background-color: #000;
+                                                z-index: 1;
+                                            "
+                                        >
+                                            Author ID
+                                        </th>
+                                        <th
+                                            style="
+                                                border: 1px solid #0f0;
+                                                padding: 8px;
+                                                text-align: left;
+                                                position: sticky;
+                                                top: 0;
+                                                background-color: #000;
+                                                z-index: 1;
+                                            "
+                                        >
+                                            Body
+                                        </th>
+                                        <th
+                                            style="
+                                                border: 1px solid #0f0;
+                                                padding: 8px;
+                                                text-align: center;
+                                                position: sticky;
+                                                top: 0;
+                                                background-color: #000;
+                                                z-index: 1;
+                                            "
+                                        >
+                                            Internal
+                                        </th>
+                                        <th
+                                            style="
+                                                border: 1px solid #0f0;
+                                                padding: 8px;
+                                                text-align: left;
+                                                position: sticky;
+                                                top: 0;
+                                                background-color: #000;
+                                                z-index: 1;
+                                            "
+                                        >
+                                            Created At
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Comments will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div id="comments" class="model-section">
-            <h2>Comments</h2>
-            <div class="button-group">
-                <button onclick="callApi('GET', `${baseUrl}/admin/comments`)" class="active">List All Comments</button>
-                <button onclick="showCommentSection('view_ticket')">Add Ticket Details</button>
+        <div id="agent" class="model-section">
+            <h2>Agent Features</h2>
+            <div>
+                <h3>List Assigned Tickets (GET /agent/tickets)</h3>
+                <form id="listAgentTicketsForm">
+                    <button type="submit">List My Tickets</button>
+                </form>
             </div>
 
-            
-
-            <div id="viewTicketDetailsSection" style="display: none;">
-                <h3>View Ticket Details</h3>
-                <form id="loadTicketDetailsForm">
-                    <label for="viewTicketId">Ticket ID:</label>
-                    <input type="text" id="viewTicketId" name="id" required class="js-number-input" />
-                    <button type="submit">Load Ticket Details</button>
+            <div>
+                <h3>
+                    View/Update Assigned Ticket (GET/PUT /agent/tickets/{id})
+                </h3>
+                <form id="loadAgentTicketForm">
+                    <label for="agentTicketId">Ticket ID:</label>
+                    <input
+                        type="text"
+                        id="agentTicketId"
+                        name="id"
+                        required
+                        class="js-number-input"
+                    />
+                    <button type="submit">Load Ticket</button>
                 </form>
-                <form id="ticketDetailsForm" style="padding-top: 5px; display: none;">
+                <form
+                    id="updateAgentTicketForm"
+                    style="padding-top: 5px; display: none"
+                >
+                    <input type="hidden" id="hiddenAgentTicketId" name="id" />
                     <div class="form-group-item">
-                        <label>ID:</label>
-                        <input type="text" id="detailTicketId" readonly />
-                    </div>
-                    <div class="form-group-item">
-                        <label>Title:</label>
-                        <input type="text" id="detailTicketTitle" readonly />
+                        <label for="agentTicketTitle">Title:</label>
+                        <input
+                            type="text"
+                            id="agentTicketTitle"
+                            name="title"
+                            readonly
+                        />
                     </div>
                     <div class="form-group-item full-width-item">
-                        <label>Description:</label>
-                        <textarea id="detailTicketDescription" readonly></textarea>
+                        <label for="agentTicketDescription">Description:</label>
+                        <textarea
+                            id="agentTicketDescription"
+                            name="description"
+                            readonly
+                        ></textarea>
                     </div>
-
                     <div class="form-group-grid">
                         <div class="form-group-item">
-                            <label>Status:</label>
-                            <input type="text" id="detailTicketStatus" readonly />
+                            <label for="agentTicketStatus">Status:</label>
+                            <select id="agentTicketStatus" name="status">
+                                <option value="Open">Open</option>
+                                <option value="In Progress">In Progress</option>
+                                <option value="Resolved">Resolved</option>
+                                <option value="Closed">Closed</option>
+                            </select>
                         </div>
                         <div class="form-group-item">
-                            <label>Priority:</label>
-                            <input type="text" id="detailTicketPriority" readonly />
+                            <label for="agentTicketPriority">Priority:</label>
+                            <select id="agentTicketPriority" name="priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
                         </div>
                     </div>
-
-                    <div class="form-group-grid">
-                        <div class="form-group-item">
-                            <label>Requester ID:</label>
-                            <input type="text" id="detailTicketRequesterId" readonly />
-                        </div>
-                        <div class="form-group-item">
-                            <label>Assignee ID:</label>
-                            <input type="text" id="detailTicketAssigneeId" readonly />
-                        </div>
-                    </div>
-
-                    <div class="form-group-grid">
-                        <div class="form-group-item">
-                            <label>Created At:</label>
-                            <input type="text" id="detailTicketCreatedAt" readonly />
-                        </div>
-                        <div class="form-group-item">
-                            <label>Updated At:</label>
-                            <input type="text" id="detailTicketUpdatedAt" readonly />
-                        </div>
-                        <div class="form-group-item">
-                            <label>Closed At:</label>
-                            <input type="text" id="detailTicketClosedAt" readonly />
-                        </div>
-                    </div>
+                    <button type="submit">Update Ticket</button>
                 </form>
+            </div>
 
-                <div id="addCommentSection" style="display: none;">
-                    <h3>Add New Comment</h3>
-                    <form id="addCommentForm">
-                        <div class="form-group-item">
-                            <label for="addCommentTicketId">Ticket ID:</label>
-                            <input type="text" id="addCommentTicketId" name="ticket_id" required readonly class="js-number-input" />
-                        </div>
-                        <div class="form-group-item">
-                            <label for="addCommentAuthorId">Author ID:</label>
-                            <input type="text" id="addCommentAuthorId" name="author_id" required class="js-number-input" />
-                        </div>
-                        <div class="form-group-item full-width-item">
-                            <label for="addCommentBody">Comment:</label>
-                            <textarea id="addCommentBody" name="body" required></textarea>
-                        </div>
-                        <div class="form-group-item">
-                            <label for="addCommentIsInternal">Internal Only:</label>
-                            <input type="checkbox" id="addCommentIsInternal" name="is_internal" style="max-width: 25%; min-height: 42px;" />
-                        </div>
-                        <button type="submit">Add Comment</button>
-                    </form>
-                </div>
+            <div>
+                <h3>
+                    Add Comment to Ticket (POST /agent/tickets/{id}/comments)
+                </h3>
+                <form id="addAgentCommentForm">
+                    <div class="form-group-item">
+                        <label for="agentCommentTicketId">Ticket ID:</label>
+                        <input
+                            type="text"
+                            id="agentCommentTicketId"
+                            name="ticket_id"
+                            required
+                            class="js-number-input"
+                        />
+                    </div>
+                    <div class="form-group-item full-width-item">
+                        <label for="agentCommentBody">Comment:</label>
+                        <textarea
+                            id="agentCommentBody"
+                            name="body"
+                            required
+                        ></textarea>
+                    </div>
+                    <div class="form-group-item">
+                        <label for="agentCommentIsInternal"
+                            >Internal Only:</label
+                        >
+                        <input
+                            type="checkbox"
+                            id="agentCommentIsInternal"
+                            name="is_internal"
+                            style="max-width: 25%; min-height: 42px"
+                        />
+                    </div>
+                    <button type="submit">Add Comment</button>
+                </form>
+            </div>
+        </div>
 
-                <div id="ticketCommentsSection" style="display: none;">
-                    <h3>Comments for this Ticket</h3>
-                    <input type="text" id="commentSearchInput" placeholder="Search comments..." style="width: 90%; margin-bottom: 10px; margin-left: 3%;" />
-                    <div style="max-height: 600px; overflow-y: auto; border: 1px solid #0F0;">
-                        <table id="ticketCommentsTable" style="width: 100%; margin-top: 10px;">
-                        <thead>
-                            <tr>
-                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">ID</th>
-                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">Author ID</th>
-                                <th style="border: 1px solid #0F0; padding: 8px; text-align: left; position: sticky; top: 0; background-color: #000; z-index: 1;">Body</th>
-                                <th style="border: 1px solid #0F0; padding: 8px; text-align: center; position: sticky; top: 0; background-color: #000; z-index: 1;">Internal</th>
-                                <th style="border: 1px solid #0F0; padding: 8px; text-align: left; position: sticky; top: 0; background-color: #000; z-index: 1;">Created At</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Comments will be loaded here -->
-                        </tbody>
-                        </table>
-                   </div>
-                </div>
+        <div id="customer" class="model-section">
+            <h2>Customer Features</h2>
+            <div>
+                <h3>Create New Ticket (POST /customer/tickets)</h3>
+                <form id="createCustomerTicketForm">
+                    <div class="form-group-item">
+                        <label for="customerTicketTitle">Title:</label>
+                        <input
+                            type="text"
+                            id="customerTicketTitle"
+                            name="title"
+                            required
+                        />
+                    </div>
+                    <div class="form-group-item full-width-item">
+                        <label for="customerTicketDescription"
+                            >Description:</label
+                        >
+                        <textarea
+                            id="customerTicketDescription"
+                            name="description"
+                        ></textarea>
+                    </div>
+                    <button type="submit">Create Ticket</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>List My Tickets (GET /customer/tickets)</h3>
+                <form id="listCustomerTicketsForm">
+                    <button type="submit">List My Tickets</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>View My Ticket (GET /customer/tickets/{id})</h3>
+                <form id="getCustomerTicketForm">
+                    <label for="customerGetTicketId">Ticket ID:</label>
+                    <input
+                        type="text"
+                        id="customerGetTicketId"
+                        name="id"
+                        required
+                        class="js-number-input"
+                    />
+                    <button type="submit">Get My Ticket</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>
+                    Add Comment to My Ticket (POST
+                    /customer/tickets/{id}/comments)
+                </h3>
+                <form id="addCustomerCommentForm">
+                    <div class="form-group-item">
+                        <label for="customerCommentTicketId">Ticket ID:</label>
+                        <input
+                            type="text"
+                            id="customerCommentTicketId"
+                            name="ticket_id"
+                            required
+                            class="js-number-input"
+                        />
+                    </div>
+                    <div class="form-group-item full-width-item">
+                        <label for="customerCommentBody">Comment:</label>
+                        <textarea
+                            id="customerCommentBody"
+                            name="body"
+                            required
+                        ></textarea>
+                    </div>
+                    <button type="submit">Add Comment</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Close My Ticket (PUT /customer/tickets/{id})</h3>
+                <form id="closeCustomerTicketForm">
+                    <label for="customerCloseTicketId">Ticket ID:</label>
+                    <input
+                        type="text"
+                        id="customerCloseTicketId"
+                        name="id"
+                        required
+                        class="js-number-input"
+                    />
+                    <button type="submit">Close Ticket</button>
+                </form>
             </div>
         </div>
 
@@ -550,34 +1202,85 @@
 
         <script>
             const apiResponse = document.getElementById("apiResponse");
-            clearApiResponse();
-            const baseUrl = window.location.origin;
+            const currentJwtDisplay = document.getElementById("currentJwt");
+            let jwtToken = localStorage.getItem("jwtToken") || "";
+
+            function updateJwtDisplay() {
+                currentJwtDisplay.textContent =
+                    jwtToken || "No JWT token found.";
+            }
+
+            function clearJwt() {
+                jwtToken = "";
+                localStorage.removeItem("jwtToken");
+                updateJwtDisplay();
+                alert("JWT token cleared.");
+            }
+
+            updateJwtDisplay(); // Initialize JWT display on load
 
             function clearApiResponse() {
-                apiResponse.textContent = '';
+                apiResponse.textContent = "";
             }
 
             function showModel(modelName) {
                 clearApiResponse();
-                document.querySelectorAll('.model-section').forEach(section => {
-                    section.classList.remove('active');
-                });
-                document.getElementById(modelName).classList.add('active');
+                document
+                    .querySelectorAll(".model-section")
+                    .forEach((section) => {
+                        section.classList.remove("active");
+                    });
+                document.getElementById(modelName).classList.add("active");
 
-                document.querySelectorAll('.menu button').forEach(button => {
-                    button.classList.remove('active');
+                document.querySelectorAll(".menu button").forEach((button) => {
+                    button.classList.remove("active");
                 });
-                document.querySelector(`.menu button[onclick="showModel('${modelName}')"]`).classList.add('active');
+                document
+                    .querySelector(
+                        `.menu button[onclick="showModel('${modelName}')"]`,
+                    )
+                    .classList.add("active");
+
+                // For admin section, show users by default
+                if (modelName === "admin") {
+                    showAdminSection("users");
+                }
             }
 
-            
+            function showAdminSection(sectionName) {
+                document
+                    .querySelectorAll(".admin-sub-section")
+                    .forEach((section) => {
+                        section.classList.remove("active");
+                    });
+                document
+                    .getElementById(`admin-${sectionName}`)
+                    .classList.add("active");
+
+                document
+                    .querySelectorAll("#admin .menu button")
+                    .forEach((button) => {
+                        button.classList.remove("active");
+                    });
+                document
+                    .querySelector(
+                        `#admin .menu button[onclick="showAdminSection('${sectionName}')"]`,
+                    )
+                    .classList.add("active");
+            }
 
             async function callApi(method, path, body = null) {
                 clearApiResponse();
                 const options = { method };
+                options.headers = { "Content-Type": "application/json" };
+
                 if (body) {
-                    options.headers = { "Content-Type": "application/json" };
                     options.body = JSON.stringify(body);
+                }
+
+                if (jwtToken && path !== `${baseUrl}/login`) {
+                    // Don't send JWT to login endpoint
+                    options.headers["Authorization"] = `Bearer ${jwtToken}`;
                 }
 
                 try {
@@ -590,298 +1293,824 @@
                 }
             }
 
-            // User Forms
-            document.getElementById("listUsersForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/`);
-            });
+            const baseUrl = window.location.origin;
 
-            document.getElementById("listAdminsForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/role/Admin`);
-            });
-            document.getElementById("listAgentsForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/role/Agent`);
-            });
-            document.getElementById("listCustomersForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/role/Customer`);
-            });
+            // Login Form
+            document
+                .getElementById("loginForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById("loginEmail").value;
+                    const password =
+                        document.getElementById("loginPassword").value;
 
-            document.getElementById("createUserForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const name = document.getElementById("createName").value;
-                const email = document.getElementById("createEmail").value;
-                const role = document.getElementById("createRole").value;
-                callApi("POST", `${baseUrl}/admin/`, { Name: name, Email: email, Role: role });
-            });
+                    try {
+                        const response = await fetch(`${baseUrl}/login`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ email, password }),
+                        });
+                        const data = await response.json();
 
-            document.getElementById("getUserForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const id = document.getElementById("getUserId").value;
-                callApi("GET", `${baseUrl}/admin/${id}`);
-            });
-
-            document.getElementById("updateUserForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const id = document.getElementById("updateUserId").value;
-                const name = document.getElementById("updateName").value;
-                const email = document.getElementById("updateEmail").value;
-                const role = document.getElementById("updateRole").value;
-                callApi("PUT", `${baseUrl}/admin/update/${id}`, { Name: name, Email: email, Role: role });
-            });
-
-            document.getElementById("deleteUserForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const id = document.getElementById("deleteUserId").value;
-                callApi("DELETE", `${baseUrl}/admin/delete/${id}`);
-            });
-
-            function showTicketForm(formType) {
-                document.getElementById('createTicketSection').style.display = 'none';
-                document.getElementById('updateTicketSection').style.display = 'none';
-                document.getElementById('updateTicketForm').style.display = 'none'; // Hide update form initially
-
-                document.querySelectorAll('.button-group button').forEach(button => {
-                    button.classList.remove('active');
+                        if (response.ok) {
+                            jwtToken = data.token;
+                            localStorage.setItem("jwtToken", jwtToken);
+                            updateJwtDisplay();
+                            apiResponse.textContent = JSON.stringify(
+                                data,
+                                null,
+                                2,
+                            );
+                            alert("Login successful! JWT token stored.");
+                        } else {
+                            apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
+                            alert("Login failed.");
+                        }
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("Login Error:", error);
+                    }
                 });
 
-                if (formType === 'create') {
-                    document.getElementById('createTicketSection').style.display = 'block';
-                    document.querySelector('.button-group button:nth-child(1)').classList.add('active');
-                } else if (formType === 'update') {
-                    document.getElementById('updateTicketSection').style.display = 'block';
-                    document.querySelector('.button-group button:nth-child(2)').classList.add('active');
+            // Admin User Forms
+            document
+                .getElementById("listUsersForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/admin/`);
+                });
+
+            document
+                .getElementById("listAdminsForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/admin/role/Admin`);
+                });
+            document
+                .getElementById("listAgentsForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/admin/role/Agent`);
+                });
+            document
+                .getElementById("listCustomersForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/admin/role/Customer`);
+                });
+
+            document
+                .getElementById("createUserForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById("createName").value;
+                    const email = document.getElementById("createEmail").value;
+                    const role = document.getElementById("createRole").value;
+                    callApi("POST", `${baseUrl}/admin/`, {
+                        Name: name,
+                        Email: email,
+                        Role: role,
+                        PasswordHash: "password",
+                    }); // PasswordHash is a placeholder
+                });
+
+            document
+                .getElementById("getUserForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById("getUserId").value;
+                    callApi("GET", `${baseUrl}/admin/${id}`);
+                });
+
+            document
+                .getElementById("updateUserForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById("updateUserId").value;
+                    const name = document.getElementById("updateName").value;
+                    const email = document.getElementById("updateEmail").value;
+                    const role = document.getElementById("updateRole").value;
+                    callApi("PUT", `${baseUrl}/admin/update/${id}`, {
+                        Name: name,
+                        Email: email,
+                        Role: role,
+                    });
+                });
+
+            document
+                .getElementById("deleteUserForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const id = document.getElementById("deleteUserId").value;
+                    callApi("DELETE", `${baseUrl}/admin/delete/${id}`);
+                });
+
+            function showTicketForm(formType) {
+                document.getElementById("createTicketSection").style.display =
+                    "none";
+                document.getElementById("updateTicketSection").style.display =
+                    "none";
+                document.getElementById("updateTicketForm").style.display =
+                    "none"; // Hide update form initially
+
+                document
+                    .querySelectorAll(".button-group button")
+                    .forEach((button) => {
+                        button.classList.remove("active");
+                    });
+
+                if (formType === "create") {
+                    document.getElementById(
+                        "createTicketSection",
+                    ).style.display = "block";
+                    document
+                        .querySelector(".button-group button:nth-child(1)")
+                        .classList.add("active");
+                } else if (formType === "update") {
+                    document.getElementById(
+                        "updateTicketSection",
+                    ).style.display = "block";
+                    document
+                        .querySelector(".button-group button:nth-child(2)")
+                        .classList.add("active");
                 }
             }
 
             // Initial display for ticket forms
-            showTicketForm('create');
+            showTicketForm("create");
 
-            // Ticket Forms
-            document.getElementById("listTicketsForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                callApi("GET", `${baseUrl}/admin/tickets`);
-            });
-
-            document.getElementById("createTicketForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const title = document.getElementById("createTicketTitle").value;
-                const description = document.getElementById("createTicketDescription").value;
-                const status = document.getElementById("createTicketStatus").value;
-                const priority = document.getElementById("createTicketPriority").value;
-                const requesterId = parseInt(document.getElementById("createTicketRequesterId").value);
-                const assigneeIdInput = document.getElementById("createTicketAssigneeId").value;
-                const assigneeId = assigneeIdInput ? parseInt(assigneeIdInput) : null;
-
-                const ticketData = {
-                    Title: title,
-                    Description: description,
-                    Status: status,
-                    Priority: priority,
-                    RequesterID: requesterId,
-                };
-
-                if (assigneeId !== null) {
-                    ticketData.AssigneeID = assigneeId;
-                }
-
-                callApi("POST", `${baseUrl}/admin/tickets`, ticketData);
-            });
-
-            document.getElementById("loadTicketForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const ticketId = document.getElementById("updateTicketId").value;
-                if (!ticketId) return;
-
-                try {
-                    const response = await fetch(`${baseUrl}/admin/tickets/${ticketId}`);
-                    const data = await response.json();
-
-                    if (response.ok) {
-                        document.getElementById("hiddenUpdateTicketId").value = data.ID;
-                        document.getElementById("updateTicketTitle").value = data.Title;
-                        document.getElementById("updateTicketDescription").value = data.Description;
-                        document.getElementById("updateTicketStatus").value = data.Status;
-                        document.getElementById("updateTicketPriority").value = data.Priority;
-                        document.getElementById("updateTicketRequesterId").value = data.RequesterID;
-                        document.getElementById("updateTicketAssigneeId").value = data.AssigneeID.Int64 || '';
-                        document.getElementById("updateTicketForm").style.display = 'block';
-                    } else {
-                        apiResponse.textContent = `Error: ${data}`;
-                        document.getElementById("updateTicketForm").style.display = 'none';
-                    }
-                } catch (error) {
-                    apiResponse.textContent = "Error: " + error.message;
-                    console.error("API Call Error:", error);
-                    document.getElementById("updateTicketForm").style.display = 'none';
-                }
-            });
-
-            document.getElementById("updateTicketForm").addEventListener("submit", (e) => {
-                e.preventDefault();
-                const ticketId = document.getElementById("hiddenUpdateTicketId").value;
-                const title = document.getElementById("updateTicketTitle").value;
-                const description = document.getElementById("updateTicketDescription").value;
-                const status = document.getElementById("updateTicketStatus").value;
-                const priority = document.getElementById("updateTicketPriority").value;
-                const requesterId = parseInt(document.getElementById("updateTicketRequesterId").value);
-                const assigneeIdInput = document.getElementById("updateTicketAssigneeId").value;
-                const assigneeId = assigneeIdInput ? parseInt(assigneeIdInput) : null;
-
-                const ticketData = {
-                    ID: ticketId,
-                    Title: title,
-                    Description: description,
-                    Status: status,
-                    Priority: priority,
-                    RequesterID: requesterId,
-                };
-
-                if (assigneeId !== null) {
-                    ticketData.AssigneeID = assigneeId;
-                }
-
-                callApi("PUT", `${baseUrl}/admin/tickets/${ticketId}`, ticketData);
-            });
-
-            // Comment Forms
-            function showCommentSection(sectionType) {
-                clearApiResponse();
-                document.getElementById('viewTicketDetailsSection').style.display = 'none';
-                // document.getElementById('addCommentSection').style.display = 'none'; // This section is now inside viewTicketDetailsSection
-                document.getElementById('ticketDetailsForm').style.display = 'none'; // Hide ticket details form initially
-
-                document.querySelectorAll('#comments .button-group button').forEach(button => {
-                    button.classList.remove('active');
+            // Admin Ticket Forms
+            document
+                .getElementById("listTicketsForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/admin/tickets`);
                 });
 
-                if (sectionType === 'list') {
+            document
+                .getElementById("createTicketForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const title =
+                        document.getElementById("createTicketTitle").value;
+                    const description = document.getElementById(
+                        "createTicketDescription",
+                    ).value;
+                    const status =
+                        document.getElementById("createTicketStatus").value;
+                    const priority = document.getElementById(
+                        "createTicketPriority",
+                    ).value;
+                    const requesterId = parseInt(
+                        document.getElementById("createTicketRequesterId")
+                            .value,
+                    );
+                    const assigneeIdInput = document.getElementById(
+                        "createTicketAssigneeId",
+                    ).value;
+                    const assigneeId = assigneeIdInput
+                        ? parseInt(assigneeIdInput)
+                        : null;
+
+                    const ticketData = {
+                        Title: title,
+                        Description: description,
+                        Status: status,
+                        Priority: priority,
+                        RequesterID: requesterId,
+                    };
+
+                    if (assigneeId !== null) {
+                        ticketData.AssigneeID = assigneeId;
+                    }
+
+                    callApi("POST", `${baseUrl}/admin/tickets`, ticketData);
+                });
+
+            document
+                .getElementById("loadTicketForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId =
+                        document.getElementById("updateTicketId").value;
+                    if (!ticketId) return;
+
+                    try {
+                        const response = await fetch(
+                            `${baseUrl}/admin/tickets/${ticketId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`,
+                                },
+                            },
+                        );
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            document.getElementById(
+                                "hiddenUpdateTicketId",
+                            ).value = data.ID;
+                            document.getElementById("updateTicketTitle").value =
+                                data.Title;
+                            document.getElementById(
+                                "updateTicketDescription",
+                            ).value = data.Description;
+                            document.getElementById(
+                                "updateTicketStatus",
+                            ).value = data.Status;
+                            document.getElementById(
+                                "updateTicketPriority",
+                            ).value = data.Priority;
+                            document.getElementById(
+                                "updateTicketRequesterId",
+                            ).value = data.RequesterID;
+                            document.getElementById(
+                                "updateTicketAssigneeId",
+                            ).value = data.AssigneeID.Int64 || "";
+                            document.getElementById(
+                                "updateTicketForm",
+                            ).style.display = "block";
+                        } else {
+                            apiResponse.textContent = `Error: ${data}`;
+                            document.getElementById(
+                                "updateTicketForm",
+                            ).style.display = "none";
+                        }
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("API Call Error:", error);
+                        document.getElementById(
+                            "updateTicketForm",
+                        ).style.display = "none";
+                    }
+                });
+
+            document
+                .getElementById("updateTicketForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const ticketId = document.getElementById(
+                        "hiddenUpdateTicketId",
+                    ).value;
+                    const title =
+                        document.getElementById("updateTicketTitle").value;
+                    const description = document.getElementById(
+                        "updateTicketDescription",
+                    ).value;
+                    const status =
+                        document.getElementById("updateTicketStatus").value;
+                    const priority = document.getElementById(
+                        "updateTicketPriority",
+                    ).value;
+                    const requesterId = parseInt(
+                        document.getElementById("updateTicketRequesterId")
+                            .value,
+                    );
+                    const assigneeIdInput = document.getElementById(
+                        "updateTicketAssigneeId",
+                    ).value;
+                    const assigneeId = assigneeIdInput
+                        ? parseInt(assigneeIdInput)
+                        : null;
+
+                    const ticketData = {
+                        ID: ticketId,
+                        Title: title,
+                        Description: description,
+                        Status: status,
+                        Priority: priority,
+                        RequesterID: requesterId,
+                    };
+
+                    if (assigneeId !== null) {
+                        ticketData.AssigneeID = assigneeId;
+                    }
+
+                    callApi(
+                        "PUT",
+                        `${baseUrl}/admin/tickets/${ticketId}`,
+                        ticketData,
+                    );
+                });
+
+            // Admin Comment Forms
+            function showCommentSection(sectionType) {
+                clearApiResponse();
+                document.getElementById(
+                    "viewTicketDetailsSection",
+                ).style.display = "none";
+                document.getElementById("ticketDetailsForm").style.display =
+                    "none"; // Hide ticket details form initially
+
+                document
+                    .querySelectorAll("#admin-comments .button-group button")
+                    .forEach((button) => {
+                        button.classList.remove("active");
+                    });
+
+                if (sectionType === "list") {
                     callApi("GET", `${baseUrl}/admin/comments`);
-                    document.querySelector('#comments .button-group button:nth-child(1)').classList.add('active');
-                } else if (sectionType === 'view_ticket') {
-                    document.getElementById('viewTicketDetailsSection').style.display = 'block';
-                    document.querySelector('#comments .button-group button:nth-child(2)').classList.add('active');
+                    document
+                        .querySelector(
+                            "#admin-comments .button-group button:nth-child(1)",
+                        )
+                        .classList.add("active");
+                } else if (sectionType === "view_ticket") {
+                    document.getElementById(
+                        "viewTicketDetailsSection",
+                    ).style.display = "block";
+                    document
+                        .querySelector(
+                            "#admin-comments .button-group button:nth-child(2)",
+                        )
+                        .classList.add("active");
                 }
-                // The add comment section is now part of view_ticket, so no separate display logic needed here
             }
 
             // Initial display for comment forms
-            showCommentSection('list');
+            showCommentSection("list");
 
-            
+            document
+                .getElementById("loadTicketDetailsForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId =
+                        document.getElementById("viewTicketId").value;
+                    if (!ticketId) return;
 
-            document.getElementById("loadTicketDetailsForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const ticketId = document.getElementById("viewTicketId").value;
-                if (!ticketId) return;
+                    try {
+                        const response = await fetch(
+                            `${baseUrl}/admin/tickets/${ticketId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`,
+                                },
+                            },
+                        );
+                        const data = await response.json();
 
-                try {
-                    const response = await fetch(`${baseUrl}/admin/tickets/${ticketId}`);
-                    const data = await response.json();
+                        if (response.ok) {
+                            document.getElementById("detailTicketId").value =
+                                data.ID;
+                            document.getElementById("detailTicketTitle").value =
+                                data.Title;
+                            document.getElementById(
+                                "detailTicketDescription",
+                            ).value = data.Description;
+                            document.getElementById(
+                                "detailTicketStatus",
+                            ).value = data.Status;
+                            document.getElementById(
+                                "detailTicketPriority",
+                            ).value = data.Priority;
+                            document.getElementById(
+                                "detailTicketRequesterId",
+                            ).value = data.RequesterID;
+                            document.getElementById(
+                                "detailTicketAssigneeId",
+                            ).value = data.AssigneeID.Int64 || "";
+                            document.getElementById(
+                                "detailTicketCreatedAt",
+                            ).value = new Date(data.CreatedAt).toLocaleString();
+                            document.getElementById(
+                                "detailTicketUpdatedAt",
+                            ).value = new Date(data.UpdatedAt).toLocaleString();
+                            document.getElementById(
+                                "detailTicketClosedAt",
+                            ).value = data.ClosedAt.Valid
+                                ? new Date(data.ClosedAt.Time).toLocaleString()
+                                : "";
+                            document.getElementById(
+                                "ticketDetailsForm",
+                            ).style.display = "grid"; // Display as grid
 
-                    if (response.ok) {
-                        document.getElementById("detailTicketId").value = data.ID;
-                        document.getElementById("detailTicketTitle").value = data.Title;
-                        document.getElementById("detailTicketDescription").value = data.Description;
-                        document.getElementById("detailTicketStatus").value = data.Status;
-                        document.getElementById("detailTicketPriority").value = data.Priority;
-                        document.getElementById("detailTicketRequesterId").value = data.RequesterID;
-                        document.getElementById("detailTicketAssigneeId").value = data.AssigneeID.Int64 || '';
-                        document.getElementById("detailTicketCreatedAt").value = new Date(data.CreatedAt).toLocaleString();
-                        document.getElementById("detailTicketUpdatedAt").value = new Date(data.UpdatedAt).toLocaleString();
-                        document.getElementById("detailTicketClosedAt").value = data.ClosedAt.Valid ? new Date(data.ClosedAt.Time).toLocaleString() : '';
-                        document.getElementById("ticketDetailsForm").style.display = 'grid'; // Display as grid
+                            // Show and populate add comment section
+                            document.getElementById(
+                                "addCommentSection",
+                            ).style.display = "block";
+                            document.getElementById(
+                                "addCommentTicketId",
+                            ).value = data.ID;
 
-                        // Show and populate add comment section
-                        document.getElementById("addCommentSection").style.display = 'block';
-                        document.getElementById("addCommentTicketId").value = data.ID;
-
-                        // Load comments for this ticket
-                        console.log(`Fetching comments for ticket ID: ${ticketId}`);
-                        // Since comments are now part of the ticket object, we don't need a separate API call
-                        const commentsData = data.Comments;
-                        console.log("Comments Data:", commentsData);
-
-                        const commentsTableBody = document.querySelector('#ticketCommentsTable tbody');
-                        commentsTableBody.innerHTML = ''; // Clear existing comments
-                        if (commentsData && commentsData.length > 0) {
-                            commentsData.forEach(comment => {
-                                const row = commentsTableBody.insertRow();
-                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.ID}</td>`;
-                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.AuthorID}</td>`;
-                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${comment.Body}</td>`;
-                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.IsInternal ? 'Yes' : 'No'}</td>`;
-                                row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${new Date(comment.CreatedAt).toLocaleString()}</td>`;
-                            });
-                            document.getElementById("ticketCommentsSection").style.display = 'block';
+                            // Load comments for this ticket
+                            const commentsData = data.Comments;
+                            const commentsTableBody = document.querySelector(
+                                "#ticketCommentsTable tbody",
+                            );
+                            commentsTableBody.innerHTML = ""; // Clear existing comments
+                            if (commentsData && commentsData.length > 0) {
+                                commentsData.forEach((comment) => {
+                                    const row = commentsTableBody.insertRow();
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.ID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.AuthorID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${comment.Body}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.IsInternal ? "Yes" : "No"}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${new Date(comment.CreatedAt).toLocaleString()}</td>`;
+                                });
+                                document.getElementById(
+                                    "ticketCommentsSection",
+                                ).style.display = "block";
+                            } else {
+                                commentsTableBody.innerHTML =
+                                    '<tr><td colspan="5" style="border: 1px solid #0F0;">No comments found for this ticket.</td></tr>';
+                                document.getElementById(
+                                    "ticketCommentsSection",
+                                ).style.display = "block";
+                            }
                         } else {
-                            commentsTableBody.innerHTML = '<tr><td colspan="5" style="border: 1px solid #0F0;">No comments found for this ticket.</td></tr>';
-                            document.getElementById("ticketCommentsSection").style.display = 'block';
+                            apiResponse.textContent = `Error: ${data}`;
+                            document.getElementById(
+                                "ticketDetailsForm",
+                            ).style.display = "none";
+                            document.getElementById(
+                                "addCommentSection",
+                            ).style.display = "none"; // Hide add comment section on error
+                            document.getElementById(
+                                "ticketCommentsSection",
+                            ).style.display = "none"; // Hide comments section on error
                         }
-
-                    } else {
-                        apiResponse.textContent = `Error: ${data}`;
-                        document.getElementById("ticketDetailsForm").style.display = 'none';
-                        document.getElementById("addCommentSection").style.display = 'none'; // Hide add comment section on error
-                        document.getElementById("ticketCommentsSection").style.display = 'none'; // Hide comments section on error
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("API Call Error:", error);
+                        document.getElementById(
+                            "ticketDetailsForm",
+                        ).style.display = "none";
                     }
-                } catch (error) {
-                    apiResponse.textContent = "Error: " + error.message;
-                    console.error("API Call Error:", error);
-                    document.getElementById("ticketDetailsForm").style.display = 'none';
-                }
-            });
-
-            document.getElementById("commentSearchInput").addEventListener("keyup", function() {
-                console.log("Search input changed:", this.value);
-                const filter = this.value.toLowerCase();
-                const rows = document.querySelectorAll('#ticketCommentsTable tbody tr');
-                rows.forEach(row => {
-                    const text = row.textContent.toLowerCase();
-                    row.style.display = text.includes(filter) ? "" : "none";
                 });
-            });
 
-            document.getElementById("addCommentForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const ticketId = parseInt(document.getElementById("addCommentTicketId").value);
-                const authorId = parseInt(document.getElementById("addCommentAuthorId").value);
-                const body = document.getElementById("addCommentBody").value;
-                const isInternal = document.getElementById("addCommentIsInternal").checked;
+            document
+                .getElementById("commentSearchInput")
+                .addEventListener("keyup", function () {
+                    const filter = this.value.toLowerCase();
+                    const rows = document.querySelectorAll(
+                        "#ticketCommentsTable tbody tr",
+                    );
+                    rows.forEach((row) => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? "" : "none";
+                    });
+                });
 
-                const commentData = {
-                    TicketID: ticketId,
-                    AuthorID: authorId,
-                    Body: body,
-                    IsInternal: isInternal,
-                };
+            document
+                .getElementById("addCommentForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId = parseInt(
+                        document.getElementById("addCommentTicketId").value,
+                    );
+                    const authorId = parseInt(
+                        document.getElementById("addCommentAuthorId").value,
+                    );
+                    const body =
+                        document.getElementById("addCommentBody").value;
+                    const isInternal = document.getElementById(
+                        "addCommentIsInternal",
+                    ).checked;
 
-                await callApi("POST", `${baseUrl}/admin/comments`, commentData);
+                    const commentData = {
+                        TicketID: ticketId,
+                        AuthorID: authorId,
+                        Body: body,
+                        IsInternal: isInternal,
+                    };
 
-                // Repoll the ticket data to refresh the comments table
-                document.getElementById("loadTicketDetailsForm").requestSubmit();
-            });
+                    await callApi(
+                        "POST",
+                        `${baseUrl}/admin/comments`,
+                        commentData,
+                    );
+
+                    // Repoll the ticket data to refresh the comments table
+                    document
+                        .getElementById("loadTicketDetailsForm")
+                        .requestSubmit();
+                });
+
+            // Agent Forms
+            document
+                .getElementById("listAgentTicketsForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/agent/tickets`);
+                });
+
+            document
+                .getElementById("loadAgentTicketForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId =
+                        document.getElementById("agentTicketId").value;
+                    if (!ticketId) return;
+
+                    try {
+                        const response = await fetch(
+                            `${baseUrl}/agent/tickets/${ticketId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`,
+                                },
+                            },
+                        );
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            document.getElementById(
+                                "hiddenAgentTicketId",
+                            ).value = data.ID;
+                            document.getElementById("agentTicketTitle").value =
+                                data.Title;
+                            document.getElementById(
+                                "agentTicketDescription",
+                            ).value = data.Description;
+                            document.getElementById("agentTicketStatus").value =
+                                data.Status;
+                            document.getElementById(
+                                "agentTicketPriority",
+                            ).value = data.Priority;
+                            document.getElementById(
+                                "updateAgentTicketForm",
+                            ).style.display = "block";
+                        } else {
+                            apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
+                            document.getElementById(
+                                "updateAgentTicketForm",
+                            ).style.display = "none";
+                        }
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("API Call Error:", error);
+                        document.getElementById(
+                            "updateAgentTicketForm",
+                        ).style.display = "none";
+                    }
+                });
+
+            document
+                .getElementById("updateAgentTicketForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const ticketId = document.getElementById(
+                        "hiddenAgentTicketId",
+                    ).value;
+                    const status =
+                        document.getElementById("agentTicketStatus").value;
+                    const priority = document.getElementById(
+                        "agentTicketPriority",
+                    ).value;
+
+                    const ticketData = {
+                        status: status,
+                        priority: priority,
+                    };
+
+                    callApi(
+                        "PUT",
+                        `${baseUrl}/agent/tickets/${ticketId}`,
+                        ticketData,
+                    );
+                });
+
+            document
+                .getElementById("addAgentCommentForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const ticketId = parseInt(
+                        document.getElementById("agentCommentTicketId").value,
+                    );
+                    const body =
+                        document.getElementById("agentCommentBody").value;
+                    const isInternal = document.getElementById(
+                        "agentCommentIsInternal",
+                    ).checked;
+
+                    const commentData = {
+                        ticket_id: ticketId,
+                        body: body,
+                        is_internal: isInternal,
+                    };
+
+                    callApi(
+                        "POST",
+                        `${baseUrl}/agent/tickets/${ticketId}/comments`,
+                        commentData,
+                    );
+                });
+
+            // Customer Forms
+            document
+                .getElementById("createCustomerTicketForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const title = document.getElementById(
+                        "customerTicketTitle",
+                    ).value;
+                    const description = document.getElementById(
+                        "customerTicketDescription",
+                    ).value;
+
+                    const ticketData = {
+                        title: title,
+                        description: description,
+                    };
+
+                    callApi("POST", `${baseUrl}/customer/tickets`, ticketData);
+                });
+
+            document
+                .getElementById("listCustomerTicketsForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    callApi("GET", `${baseUrl}/customer/tickets`);
+                });
+
+            document
+                .getElementById("getCustomerTicketForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId = document.getElementById(
+                        "customerGetTicketId",
+                    ).value;
+                    if (!ticketId) return;
+
+                    try {
+                        const response = await fetch(
+                            `${baseUrl}/customer/tickets/${ticketId}`,
+                            {
+                                headers: {
+                                    Authorization: `Bearer ${jwtToken}`,
+                                },
+                            },
+                        );
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            apiResponse.textContent = JSON.stringify(
+                                data,
+                                null,
+                                2,
+                            );
+                        } else {
+                            apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
+                        }
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("API Call Error:", error);
+                    }
+                });
+
+            document
+                .getElementById("addCustomerCommentForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const ticketId = parseInt(
+                        document.getElementById("customerCommentTicketId")
+                            .value,
+                    );
+                    const body = document.getElementById(
+                        "customerCommentBody",
+                    ).value;
+
+                    const commentData = {
+                        ticket_id: ticketId,
+                        body: body,
+                    };
+
+                    callApi(
+                        "POST",
+                        `${baseUrl}/customer/tickets/${ticketId}/comments`,
+                        commentData,
+                    );
+                });
+
+            document
+                .getElementById("closeCustomerTicketForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const ticketId = document.getElementById(
+                        "customerCloseTicketId",
+                    ).value;
+                    callApi("PUT", `${baseUrl}/customer/tickets/${ticketId}`, {
+                        status: "Closed",
+                    });
+                });
+
+            function showLoginSection(sectionName) {
+                document
+                    .querySelectorAll(".login-sub-section")
+                    .forEach((section) => {
+                        section.style.display = "none";
+                    });
+                document.getElementById(`login-${sectionName}`).style.display =
+                    "block";
+
+                document
+                    .querySelectorAll("#login .menu button")
+                    .forEach((button) => {
+                        button.classList.remove("active");
+                    });
+                document
+                    .querySelector(
+                        `#login .menu button[onclick="showLoginSection('${sectionName}')"]`,
+                    )
+                    .classList.add("active");
+            }
+
+            // Initial display for login forms
+            showLoginSection("authenticate");
+
+            // Register Customer Form
+            document
+                .getElementById("registerCustomerForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById(
+                        "registerCustomerName",
+                    ).value;
+                    const email = document.getElementById(
+                        "registerCustomerEmail",
+                    ).value;
+                    const password = document.getElementById(
+                        "registerCustomerPassword",
+                    ).value;
+
+                    try {
+                        const response = await fetch(`${baseUrl}/register`, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                Name: name,
+                                Email: email,
+                                PasswordHash: password,
+                            }),
+                        });
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            apiResponse.textContent = JSON.stringify(
+                                data,
+                                null,
+                                2,
+                            );
+                            alert("Customer registration successful!");
+                        } else {
+                            apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
+                            alert("Customer registration failed.");
+                        }
+                    } catch (error) {
+                        apiResponse.textContent = "Error: " + error.message;
+                        console.error("Registration Error:", error);
+                    }
+                });
+
+            // Forgot Password Forms
+            document
+                .getElementById("forgotPasswordForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById(
+                        "forgotPasswordEmail",
+                    ).value;
+                    callApi("POST", `${baseUrl}/forgot-password`, {
+                        email: email,
+                    });
+                });
+
+            document
+                .getElementById("resetPasswordForm")
+                .addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    const token = document.getElementById("resetToken").value;
+                    const newPassword =
+                        document.getElementById("newPassword").value;
+                    callApi("POST", `${baseUrl}/reset-password`, {
+                        token: token,
+                        new_password: newPassword,
+                    });
+                });
 
             // Enforce numeric input for elements with class 'js-number-input' and handle arrow key increments/decrements
-            document.querySelectorAll('.js-number-input').forEach(inputElement => {
-                inputElement.addEventListener('input', function (event) {
-                    // Remove any non-digit characters
-                    this.value = this.value.replace(/[^0-9]/g, '');
+            document
+                .querySelectorAll(".js-number-input")
+                .forEach((inputElement) => {
+                    inputElement.addEventListener("input", function (event) {
+                        // Remove any non-digit characters
+                        this.value = this.value.replace(/[^0-9]/g, "");
+                    });
+
+                    inputElement.addEventListener("keydown", function (event) {
+                        let currentValue = parseInt(this.value) || 0;
+                        if (event.key === "ArrowUp") {
+                            event.preventDefault(); // Prevent cursor movement
+                            this.value = currentValue + 1;
+                        } else if (event.key === "ArrowDown") {
+                            event.preventDefault(); // Prevent cursor movement
+                            this.value = Math.max(0, currentValue - 1); // Ensure value doesn't go below 0
+                        }
+                    });
                 });
 
-                inputElement.addEventListener('keydown', function (event) {
-                    let currentValue = parseInt(this.value) || 0;
-                    if (event.key === 'ArrowUp') {
-                        event.preventDefault(); // Prevent cursor movement
-                        this.value = currentValue + 1;
-                    } else if (event.key === 'ArrowDown') {
-                        event.preventDefault(); // Prevent cursor movement
-                        this.value = Math.max(0, currentValue - 1); // Ensure value doesn't go below 0
-                    }
-                });
-            });
+            // Initial display
+            showModel("login");
         </script>
     </body>
 </html>

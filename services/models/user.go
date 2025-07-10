@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"time"
 
@@ -11,13 +12,15 @@ import (
 
 // User represents the User model in the database.
 type User struct {
-	bun.BaseModel `bun:"table:users,alias:user"`
-	ID            int64     `bun:"id,pk,autoincrement,type:integer"`
-	Name          string    `bun:"name,notnull"`
-	Email         string    `bun:"email,notnull,unique"`
-	PasswordHash  string    `bun:"password_hash,notnull"`
-	Role          string    `bun:"role,notnull,default:'Agent'"`
-	CreatedAt     time.Time `bun:"created_at,notnull,default:current_timestamp"`
+	bun.BaseModel        `bun:"table:users,alias:user"`
+	ID                   int64          `bun:"id,pk,autoincrement,type:integer"`
+	Name                 string         `bun:"name,notnull"`
+	Email                string         `bun:"email,notnull,unique"`
+	PasswordHash         string         `bun:"password_hash,notnull"`
+	Role                 string         `bun:"role,notnull,default:'Agent'"`
+	CreatedAt            time.Time      `bun:"created_at,notnull,default:current_timestamp"`
+	PasswordResetToken   sql.NullString `bun:"password_reset_token"`
+	PasswordResetExpires sql.NullTime   `bun:"password_reset_expires"`
 }
 
 // GetUserByID retrieves a user from the database by their ID.
@@ -72,4 +75,14 @@ func GetUsersByRole(db *bun.DB, ctx context.Context, role string) ([]*User, erro
 		return nil, err
 	}
 	return users, nil
+}
+
+// GetUserByEmail retrieves a user from the database by their email.
+func GetUserByEmail(db *bun.DB, ctx context.Context, email string) (*User, error) {
+	user := new(User)
+	err := db.NewSelect().Model(user).Where("email = ?", email).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return user, nil
 }

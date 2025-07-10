@@ -107,3 +107,122 @@ func (h *CommentHandler) ListCommentsByTicketID(w http.ResponseWriter, r *http.R
 	render.Status(r, http.StatusOK)
 	renderer.PrettyJSON(w, r, comments)
 }
+
+func (h *CommentHandler) CreateAgentComment(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	authorID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	ticketIDParam := chi.URLParam(r, "id")
+	ticketID, err := strconv.ParseInt(ticketIDParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	var req struct {
+		Body       string `json:"body"`
+		IsInternal bool   `json:"is_internal"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	comment := models.Comment{
+		TicketID:   ticketID,
+		AuthorID:   authorID,
+		Body:       req.Body,
+		IsInternal: req.IsInternal,
+	}
+
+	if err := models.CreateComment(h.db, r.Context(), &comment); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusCreated)
+	renderer.PrettyJSON(w, r, comment)
+}
+
+func (h *CommentHandler) CreateCustomerComment(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	authorID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	ticketIDParam := chi.URLParam(r, "id")
+	ticketID, err := strconv.ParseInt(ticketIDParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	ticket, err := models.GetTicketByID(h.db, r.Context(), ticketID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	if ticket.RequesterID != authorID {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to comment on this ticket")
+		return
+	}
+
+	var req struct {
+		Body string `json:"body"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	comment := models.Comment{
+		TicketID:   ticketID,
+		AuthorID:   authorID,
+		Body:       req.Body,
+		IsInternal: false,
+	}
+
+	if err := models.CreateComment(h.db, r.Context(), &comment); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusCreated)
+	renderer.PrettyJSON(w, r, comment)
+}

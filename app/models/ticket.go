@@ -207,3 +207,307 @@ func (h *TicketHandler) UpdateTicket(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusOK)
 	renderer.PrettyJSON(w, r, ticket)
 }
+
+func (h *TicketHandler) ListAgentTickets(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	assigneeID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	tickets, err := models.ListTicketsByAssigneeID(h.db, r.Context(), assigneeID)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, tickets)
+}
+
+func (h *TicketHandler) GetAgentTicket(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	assigneeID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	ticket, err := models.GetTicketByID(h.db, r.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	if !ticket.AssigneeID.Valid || ticket.AssigneeID.Int64 != assigneeID {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to view this ticket")
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, ticket)
+}
+
+func (h *TicketHandler) UpdateAgentTicket(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	assigneeID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	existingTicket, err := models.GetTicketByID(h.db, r.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	if !existingTicket.AssigneeID.Valid || existingTicket.AssigneeID.Int64 != assigneeID {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to update this ticket")
+		return
+	}
+
+	var req struct {
+		Status   string `json:"status"`
+		Priority string `json:"priority"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	existingTicket.Status = req.Status
+	existingTicket.Priority = req.Priority
+
+	if err := models.UpdateTicket(h.db, r.Context(), existingTicket); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, existingTicket)
+}
+
+func (h *TicketHandler) CreateCustomerTicket(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	requesterID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	var req struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	ticket := models.Ticket{
+		Title:       req.Title,
+		Description: req.Description,
+		RequesterID: requesterID,
+		Status:      "Open",
+		Priority:    "Medium",
+	}
+
+	if err := models.CreateTicket(h.db, r.Context(), &ticket); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusCreated)
+	renderer.PrettyJSON(w, r, ticket)
+}
+
+func (h *TicketHandler) ListCustomerTickets(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	requesterID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	tickets, err := models.ListTicketsByRequesterID(h.db, r.Context(), requesterID)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, tickets)
+}
+
+func (h *TicketHandler) GetCustomerTicket(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	requesterID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	ticket, err := models.GetTicketByID(h.db, r.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	if ticket.RequesterID != requesterID {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to view this ticket")
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, ticket)
+}
+
+func (h *TicketHandler) CloseCustomerTicket(w http.ResponseWriter, r *http.Request) {
+	userID, ok := r.Context().Value("userID").(string)
+	if !ok {
+		render.Status(r, http.StatusUnauthorized)
+		renderer.PrettyJSON(w, r, "Unauthorized")
+		return
+	}
+
+	requesterID, err := strconv.ParseInt(userID, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, "Invalid user ID")
+		return
+	}
+
+	idParam := chi.URLParam(r, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, "Invalid ticket ID")
+		return
+	}
+
+	existingTicket, err := models.GetTicketByID(h.db, r.Context(), id)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "Ticket not found")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	if existingTicket.RequesterID != requesterID {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to close this ticket")
+		return
+	}
+
+	existingTicket.Status = "Closed"
+
+	if err := models.UpdateTicket(h.db, r.Context(), existingTicket); err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, existingTicket)
+}

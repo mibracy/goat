@@ -96,3 +96,23 @@ func DeleteTicket(db *bun.DB, ctx context.Context, ticketID int64) error {
 	_, err := db.NewDelete().Model(&Ticket{}).Where("id = ?", ticketID).Exec(ctx)
 	return err
 }
+
+// ListTicketsByAssigneeID retrieves all tickets from the database assigned to a specific user.
+func ListTicketsByAssigneeID(db *bun.DB, ctx context.Context, assigneeID int64) ([]Ticket, error) {
+	var tickets []Ticket
+	err := db.NewSelect().Model(&tickets).Where("assignee_id = ?", assigneeID).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return tickets, nil
+}
+
+// ListTicketsByRequesterID retrieves all tickets from the database requested by a specific user.
+func ListTicketsByRequesterID(db *bun.DB, ctx context.Context, requesterID int64) ([]Ticket, error) {
+	var tickets []Ticket
+	err := db.NewSelect().Model(&tickets).Where("requester_id = ?", requesterID).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return tickets, nil
+}
