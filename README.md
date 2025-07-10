@@ -4,8 +4,8 @@
 
 ✨ [Live Demo](http://goat.mibracy.duckdns.org) ✨
 
-🐐 is not your average ticking system. Lightweight, modular, and extensible ticketing system built with Go. 
-It's designed to be a foundation for a robust and scalable customer support and issue tracking platform. 
+🐐 is not your average ticking system. Lightweight, modular, and extensible ticketing system built with Go.
+It's designed to be a foundation for a robust and scalable customer support and issue tracking platform.
 The project is structured with a clear separation of concerns, making it easy to understand, maintain, and extend. Architecture inspired by YATS
 
 ## Core Concepts
@@ -51,17 +51,12 @@ The system is built around the idea of providing a solid backend for a ticketing
     ```bash
     go run main.go
     ```
-    The server will start on `http://localhost:8420`.
 
 5.  **Using the HTML Page:**
-    Once the server is running, you can interact with the API using the provided HTML page.
-    Open `index.html` in your web browser:
+    Once the server is running, you can interact with the API's using the provided HTML page.
     ```bash
-    open index.html # On macOS
-    start index.html # On Windows
-    xdg-open index.html # On Linux
+    The server will start on `http://localhost:8420`
     ```
-    This page provides forms to test the different user endpoints.
 
 ## Docker
 

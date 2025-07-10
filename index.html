@@ -550,9 +550,15 @@
 
         <script>
             const apiResponse = document.getElementById("apiResponse");
+            clearApiResponse();
             const baseUrl = window.location.origin;
 
+            function clearApiResponse() {
+                apiResponse.textContent = '';
+            }
+
             function showModel(modelName) {
+                clearApiResponse();
                 document.querySelectorAll('.model-section').forEach(section => {
                     section.classList.remove('active');
                 });
@@ -564,7 +570,10 @@
                 document.querySelector(`.menu button[onclick="showModel('${modelName}')"]`).classList.add('active');
             }
 
+            
+
             async function callApi(method, path, body = null) {
+                clearApiResponse();
                 const options = { method };
                 if (body) {
                     options.headers = { "Content-Type": "application/json" };
@@ -739,6 +748,7 @@
 
             // Comment Forms
             function showCommentSection(sectionType) {
+                clearApiResponse();
                 document.getElementById('viewTicketDetailsSection').style.display = 'none';
                 // document.getElementById('addCommentSection').style.display = 'none'; // This section is now inside viewTicketDetailsSection
                 document.getElementById('ticketDetailsForm').style.display = 'none'; // Hide ticket details form initially
