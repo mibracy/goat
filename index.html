@@ -1546,8 +1546,15 @@
 
                 try {
                     const response = await fetch(path, options);
-                    const data = await response.text();
-                    apiResponse.textContent = data;
+                    const textData = await response.text();
+
+                    try {
+                        const jsonData = JSON.parse(textData);
+                        apiResponse.textContent = JSON.stringify(jsonData, null, 2);
+                    } catch (jsonError) {
+                        // If not JSON, display as plain text
+                        apiResponse.textContent = textData;
+                    }
                 } catch (error) {
                     apiResponse.textContent = "Error: " + error.message;
                     console.error("API Call Error:", error);
@@ -1902,18 +1909,14 @@
                         document.getElementById("viewTicketId").value;
                     if (!ticketId) return;
 
-                    try {
-                        const response = await fetch(
-                            `${baseUrl}/admin/tickets/${ticketId}`,
-                            {
-                                headers: {
-                                    Authorization: `Bearer ${jwtToken}`,
-                                },
-                            },
-                        );
-                        const data = await response.json();
+                    // Call callApi to fetch and display the raw JSON response
+                    await callApi("GET", `${baseUrl}/admin/tickets/${ticketId}`);
 
-                        if (response.ok) {
+                    // Now, parse the content from apiResponse to populate the form fields
+                    try {
+                        const data = JSON.parse(apiResponse.textContent);
+
+                        if (data) {
                             document.getElementById("detailTicketId").value =
                                 data.ID;
                             document.getElementById("detailTicketTitle").value =
@@ -1982,7 +1985,8 @@
                                 ).style.display = "block";
                             }
                         } else {
-                            apiResponse.textContent = `Error: ${data}`;
+                            // Handle cases where data is null or empty after parsing
+                            apiResponse.textContent = "Error: Could not parse ticket data.";
                             document.getElementById(
                                 "ticketDetailsForm",
                             ).style.display = "none";
@@ -1994,11 +1998,17 @@
                             ).style.display = "none"; // Hide comments section on error
                         }
                     } catch (error) {
-                        apiResponse.textContent = "Error: " + error.message;
-                        console.error("API Call Error:", error);
+                        apiResponse.textContent = "Error parsing response: " + error.message;
+                        console.error("JSON Parse Error:", error);
                         document.getElementById(
                             "ticketDetailsForm",
                         ).style.display = "none";
+                        document.getElementById(
+                            "addCommentSection",
+                        ).style.display = "none"; // Hide add comment section on error
+                        document.getElementById(
+                            "ticketCommentsSection",
+                        ).style.display = "none"; // Hide comments section on error
                     }
                 });
 
