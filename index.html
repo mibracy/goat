@@ -1601,6 +1601,12 @@
                 ).style.display = "none";
                 document.getElementById("ticketDetailsForm").style.display =
                     "none"; // Hide ticket details form initially
+                document.getElementById(
+                    "addCommentSection",
+                ).style.display = "none"; // Hide add comment section initially
+                document.getElementById(
+                    "ticketCommentsSection",
+                ).style.display = "none"; // Hide comments section initially
 
                 document
                     .querySelectorAll("#admin-comments .button-group button")
@@ -1626,9 +1632,6 @@
                         .classList.add("active");
                 }
             }
-
-            // Initial display for comment forms
-            showCommentSection("list");
 
             document
                 .getElementById("loadTicketDetailsForm")
@@ -2038,9 +2041,9 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify({
-                                Name: name,
-                                Email: email,
-                                PasswordHash: password,
+                                name: name,
+                                email: email,
+                                password: password,
                             }),
                         });
                         const data = await response.json();

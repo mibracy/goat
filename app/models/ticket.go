@@ -3,9 +3,11 @@ package models
 import (
 	"context"
 	"database/sql"
-	"github.com/go-chi/chi/v5"
+	"goat/app/middleware"
 	"net/http"
 	"strconv"
+
+	"github.com/go-chi/chi/v5"
 
 	"github.com/go-chi/render"
 	"github.com/uptrace/bun"
@@ -209,7 +211,7 @@ func (h *TicketHandler) UpdateTicket(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *TicketHandler) ListAgentTickets(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -235,7 +237,7 @@ func (h *TicketHandler) ListAgentTickets(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *TicketHandler) GetAgentTicket(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -275,12 +277,13 @@ func (h *TicketHandler) GetAgentTicket(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Agent can see all comments
 	render.Status(r, http.StatusOK)
 	renderer.PrettyJSON(w, r, ticket)
 }
 
 func (h *TicketHandler) UpdateAgentTicket(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -345,7 +348,20 @@ func (h *TicketHandler) UpdateAgentTicket(w http.ResponseWriter, r *http.Request
 }
 
 func (h *TicketHandler) CreateCustomerTicket(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+
+	var req struct {
+		Title       string `json:"title"`
+		Description string `json:"description"`
+		Priority    string `json:"priority"`
+	}
+
+	if err := render.DecodeJSON(r.Body, &req); err != nil {
+		render.Status(r, http.StatusBadRequest)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -359,23 +375,12 @@ func (h *TicketHandler) CreateCustomerTicket(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	var req struct {
-		Title       string `json:"title"`
-		Description string `json:"description"`
-	}
-
-	if err := render.DecodeJSON(r.Body, &req); err != nil {
-		render.Status(r, http.StatusBadRequest)
-		renderer.PrettyJSON(w, r, err.Error())
-		return
-	}
-
 	ticket := models.Ticket{
 		Title:       req.Title,
 		Description: req.Description,
 		RequesterID: requesterID,
 		Status:      "Open",
-		Priority:    "Medium",
+		Priority:    req.Priority,
 	}
 
 	if err := models.CreateTicket(h.db, r.Context(), &ticket); err != nil {
@@ -389,7 +394,7 @@ func (h *TicketHandler) CreateCustomerTicket(w http.ResponseWriter, r *http.Requ
 }
 
 func (h *TicketHandler) ListCustomerTickets(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -415,7 +420,7 @@ func (h *TicketHandler) ListCustomerTickets(w http.ResponseWriter, r *http.Reque
 }
 
 func (h *TicketHandler) GetCustomerTicket(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")
@@ -455,12 +460,21 @@ func (h *TicketHandler) GetCustomerTicket(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	// Filter internal comments for customers
+	filteredComments := []models.Comment{}
+	for _, comment := range ticket.Comments {
+		if !comment.IsInternal {
+			filteredComments = append(filteredComments, comment)
+		}
+	}
+	ticket.Comments = filteredComments
+
 	render.Status(r, http.StatusOK)
 	renderer.PrettyJSON(w, r, ticket)
 }
 
 func (h *TicketHandler) CloseCustomerTicket(w http.ResponseWriter, r *http.Request) {
-	userID, ok := r.Context().Value("userID").(string)
+	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
 		render.Status(r, http.StatusUnauthorized)
 		renderer.PrettyJSON(w, r, "Unauthorized")

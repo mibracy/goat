@@ -9,7 +9,6 @@ import (
 	"github.com/uptrace/bun"
 
 	router "goat/app/controllers"
-	"goat/services/config"
 	model "goat/services/models"
 )
 
@@ -182,12 +181,12 @@ func demoCommentOps(db *bun.DB, ctx context.Context) {
 }
 
 func main() {
-	ctx := context.Background()
-	db := config.ConnectDB()
+	// ctx := context.Background()
+	// db := config.ConnectDB()
 
-	demoUsersOps(db, ctx)
-	demoTicketOps(db, ctx)
-	demoCommentOps(db, ctx)
+	// demoUsersOps(db, ctx)
+	// demoTicketOps(db, ctx)
+	// demoCommentOps(db, ctx)
 
 	// Set up and start the HTTP server.
 	router.SetupServer()

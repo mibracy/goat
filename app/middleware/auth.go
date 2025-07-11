@@ -1,4 +1,3 @@
-
 package middleware
 
 import (
@@ -7,13 +6,14 @@ import (
 	"os"
 	"strings"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/go-chi/render"
+	"github.com/golang-jwt/jwt/v5"
 
 	"goat/app/renderer"
 )
 
 type contextKey string
+
 const UserIDKey contextKey = "userID"
 const UserRoleKey contextKey = "userRole"
 
@@ -55,16 +55,25 @@ func AuthMiddleware(next http.Handler) http.Handler {
 	})
 }
 
-func RoleMiddleware(role string) func(http.Handler) http.Handler {
+func RoleMiddleware(roles ...string) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			userRole, ok := r.Context().Value(UserRoleKey).(string)
-			if !ok || (userRole != role && userRole != "Admin") { // Admins can access everything
+			if !ok {
 				render.Status(r, http.StatusForbidden)
 				renderer.PrettyJSON(w, r, "Insufficient permissions")
 				return
 			}
-			next.ServeHTTP(w, r)
+
+			for _, role := range roles {
+				if userRole == role {
+					next.ServeHTTP(w, r)
+					return
+				}
+			}
+
+			render.Status(r, http.StatusForbidden)
+			renderer.PrettyJSON(w, r, "Insufficient permissions")
 		})
 	}
 }

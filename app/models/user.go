@@ -3,6 +3,7 @@ package models
 import (
 	"context"
 	"crypto/rand"
+	"database/sql"
 	"encoding/hex"
 	"encoding/json"
 	"golang.org/x/crypto/bcrypt"
@@ -61,13 +62,13 @@ func (h *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	}
 	user, err := models.GetUserByID(h.db, context.Background(), idNum)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "User not found")
+			return
+		}
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
-		return
-	}
-	if user == nil {
-		render.Status(r, http.StatusNotFound)
-		renderer.PrettyJSON(w, r, "User not found")
 		return
 	}
 	render.Status(r, http.StatusOK)
@@ -82,6 +83,10 @@ func (h *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		render.Status(r, http.StatusBadRequest)
 		renderer.PrettyJSON(w, r, err.Error())
 		return
+	}
+
+	if data.PasswordHash == "" {
+		data.PasswordHash = "password"
 	}
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(data.PasswordHash), bcrypt.DefaultCost)
@@ -113,13 +118,13 @@ func (h *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	existingUser, err := models.GetUserByID(h.db, context.Background(), idNum)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusNotFound)
+			renderer.PrettyJSON(w, r, "User not found")
+			return
+		}
 		render.Status(r, http.StatusInternalServerError)
 		renderer.PrettyJSON(w, r, err.Error())
-		return
-	}
-	if existingUser == nil {
-		render.Status(r, http.StatusNotFound)
-		renderer.PrettyJSON(w, r, "User not found")
 		return
 	}
 
@@ -182,8 +187,13 @@ func (h *UserHandler) Login(w http.ResponseWriter, r *http.Request) {
 
 	user, err := models.GetUserByEmail(h.db, context.Background(), creds.Email)
 	if err != nil {
-		render.Status(r, http.StatusUnauthorized)
-		renderer.PrettyJSON(w, r, "Invalid credentials")
+		if err == sql.ErrNoRows {
+			render.Status(r, http.StatusUnauthorized)
+			renderer.PrettyJSON(w, r, "Invalid credentials")
+			return
+		}
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
 		return
 	}
 
@@ -310,9 +320,9 @@ func (h *UserHandler) ResetPassword(w http.ResponseWriter, r *http.Request) {
 
 func (h *UserHandler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	var req struct {
-		Name     string `json:"Name"`
-		Email    string `json:"Email"`
-		Password string `json:"Password"`
+		Name     string `json:"name"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
 	}
 
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
@@ -344,5 +354,3 @@ func (h *UserHandler) RegisterCustomer(w http.ResponseWriter, r *http.Request) {
 	render.Status(r, http.StatusCreated)
 	renderer.PrettyJSON(w, r, user)
 }
-
-

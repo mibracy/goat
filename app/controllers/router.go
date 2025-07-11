@@ -56,7 +56,7 @@ func SetupServer() {
 
 	r.Route("/agent", func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
-		r.Use(middleware.RoleMiddleware("Agent"))
+		r.Use(middleware.RoleMiddleware("Admin", "Agent"))
 		r.Get("/tickets", ticketHandler.ListAgentTickets)
 		r.Get("/tickets/{id}", ticketHandler.GetAgentTicket)
 		r.Put("/tickets/{id}", ticketHandler.UpdateAgentTicket)
@@ -65,7 +65,7 @@ func SetupServer() {
 
 	r.Route("/customer", func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
-		r.Use(middleware.RoleMiddleware("Customer"))
+		r.Use(middleware.RoleMiddleware("Admin", "Agent", "Customer"))
 		r.Post("/tickets", ticketHandler.CreateCustomerTicket)
 		r.Get("/tickets", ticketHandler.ListCustomerTickets)
 		r.Get("/tickets/{id}", ticketHandler.GetCustomerTicket)
