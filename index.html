@@ -754,12 +754,12 @@
                         List All Comments
                     </button>
                     <button onclick="showCommentSection('view_ticket')">
-                        Add Ticket Details
+                        Lookup Ticket
                     </button>
                 </div>
 
                 <div id="viewTicketDetailsSection">
-                    <h3>View Ticket Details</h3>
+                    <h3>Ticket Details</h3>
                     <form id="loadTicketDetailsForm">
                         <label for="viewTicketId">Ticket ID:</label>
                         <input
@@ -1123,6 +1123,105 @@
                 </form>
             </div>
 
+            <div id="agentTicketCommentsSection" style="display: none">
+                <h3>Comments for this Ticket</h3>
+                <input
+                    type="text"
+                    id="agentCommentSearchInput"
+                    placeholder="Search comments..."
+                    style="
+                        width: 90%;
+                        margin-bottom: 10px;
+                        margin-left: 3%;
+                    "
+                />
+                <div
+                    style="
+                        max-height: 600px;
+                        overflow-y: auto;
+                        border: 1px solid #0f0;
+                    "
+                >
+                    <table
+                        id="agentTicketCommentsTable"
+                        style="width: 100%; margin-top: 10px"
+                    >
+                        <thead>
+                            <tr>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: center;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    ID
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: center;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Author ID
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: left;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Body
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: center;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Internal
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: left;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Created At
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Comments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div>
                 <h3>Assign Ticket to Self (PUT /agent/tickets/{id})</h3>
                 <form id="assignAgentTicketForm">
@@ -1230,6 +1329,105 @@
                 </form>
             </div>
 
+            <div id="customerTicketCommentsSection" style="display: none">
+                <h3>Comments for this Ticket</h3>
+                <input
+                    type="text"
+                    id="customerCommentSearchInput"
+                    placeholder="Search comments..."
+                    style="
+                        width: 90%;
+                        margin-bottom: 10px;
+                        margin-left: 3%;
+                    "
+                />
+                <div
+                    style="
+                        max-height: 600px;
+                        overflow-y: auto;
+                        border: 1px solid #0f0;
+                    "
+                >
+                    <table
+                        id="customerTicketCommentsTable"
+                        style="width: 100%; margin-top: 10px"
+                    >
+                        <thead>
+                            <tr>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: center;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    ID
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: center;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Author ID
+                                </th>
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: left;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Body
+                                </th>
+<!--                                <th-->
+<!--                                    style="-->
+<!--                                        border: 1px solid #0f0;-->
+<!--                                        padding: 8px;-->
+<!--                                        text-align: center;-->
+<!--                                        position: sticky;-->
+<!--                                        top: 0;-->
+<!--                                        background-color: #000;-->
+<!--                                        z-index: 1;-->
+<!--                                    "-->
+<!--                                >-->
+<!--                                    Internal-->
+<!--                                </th>-->
+                                <th
+                                    style="
+                                        border: 1px solid #0f0;
+                                        padding: 8px;
+                                        text-align: left;
+                                        position: sticky;
+                                        top: 0;
+                                        background-color: #000;
+                                        z-index: 1;
+                                    "
+                                >
+                                    Created At
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Comments will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
             <div>
                 <h3>Close My Ticket (PUT /customer/tickets/{id})</h3>
                 <form id="closeCustomerTicketForm">
@@ -1299,6 +1497,18 @@
             }
 
             function showAdminSection(sectionName) {
+                document.getElementById(
+                    "viewTicketDetailsSection",
+                ).style.display = "none";
+                document.getElementById("ticketDetailsForm").style.display =
+                    "none"; // Hide ticket details form initially
+                document.getElementById(
+                    "addCommentSection",
+                ).style.display = "none"; // Hide add comment section initially
+                document.getElementById(
+                    "ticketCommentsSection",
+                ).style.display = "none"; // Hide comments section initially
+
                 document
                     .querySelectorAll(".admin-sub-section")
                     .forEach((section) => {
@@ -1879,11 +2089,41 @@
                             document.getElementById(
                                 "updateAgentTicketForm",
                             ).style.display = "block";
+
+                            // Load comments for this ticket (reusing admin logic)
+                            const commentsData = data.Comments;
+                            const commentsTableBody = document.querySelector(
+                                "#agentTicketCommentsTable tbody",
+                            );
+                            commentsTableBody.innerHTML = ""; // Clear existing comments
+                            if (commentsData && commentsData.length > 0) {
+                                commentsData.forEach((comment) => {
+                                    const row = commentsTableBody.insertRow();
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.ID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.AuthorID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${comment.Body}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.IsInternal ? "Yes" : "No"}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${new Date(comment.CreatedAt).toLocaleString()}</td>`;
+                                });
+                                document.getElementById(
+                                    "agentTicketCommentsSection",
+                                ).style.display = "block";
+                            } else {
+                                commentsTableBody.innerHTML =
+                                    '<tr><td colspan="5" style="border: 1px solid #0F0;">No comments found for this ticket.</td></tr>';
+                                document.getElementById(
+                                    "agentTicketCommentsSection",
+                                ).style.display = "block";
+                            }
+
                         } else {
                             apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
                             document.getElementById(
                                 "updateAgentTicketForm",
                             ).style.display = "none";
+                            document.getElementById(
+                                "agentTicketCommentsSection",
+                            ).style.display = "none"; // Hide comments section on error
                         }
                     } catch (error) {
                         apiResponse.textContent = "Error: " + error.message;
@@ -1891,6 +2131,9 @@
                         document.getElementById(
                             "updateAgentTicketForm",
                         ).style.display = "none";
+                        document.getElementById(
+                            "agentTicketCommentsSection",
+                        ).style.display = "none"; // Hide comments section on error
                     }
                 });
 
@@ -1965,6 +2208,19 @@
                     const assigneeIdInt = parseInt(userId);
                     console.log('Parsed Assignee ID:', assigneeIdInt);
                     callApi("PUT", `${baseUrl}/agent/tickets/${ticketId}`, { AssigneeID: assigneeIdInt });
+                });
+
+            document
+                .getElementById("agentCommentSearchInput")
+                .addEventListener("keyup", function () {
+                    const filter = this.value.toLowerCase();
+                    const rows = document.querySelectorAll(
+                        "#agentTicketCommentsTable tbody tr",
+                    );
+                    rows.forEach((row) => {
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(filter) ? "" : "none";
+                    });
                 });
 
             function getUserIdFromJwt() {
@@ -2042,12 +2298,45 @@
                                 null,
                                 2,
                             );
+
+                            // Load comments for this ticket (reusing admin logic)
+                            const commentsData = data.Comments;
+                            const commentsTableBody = document.querySelector(
+                                "#customerTicketCommentsTable tbody",
+                            );
+                            commentsTableBody.innerHTML = ""; // Clear existing comments
+                            if (commentsData && commentsData.length > 0) {
+                                commentsData.forEach((comment) => {
+                                    const row = commentsTableBody.insertRow();
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.ID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.AuthorID}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${comment.Body}</td>`;
+                                    // row.insertCell().outerHTML = `<td style="border: 1px solid #0F0; text-align: center;">${comment.IsInternal ? "Yes" : "No"}</td>`;
+                                    row.insertCell().outerHTML = `<td style="border: 1px solid #0F0;">${new Date(comment.CreatedAt).toLocaleString()}</td>`;
+                                });
+                                document.getElementById(
+                                    "customerTicketCommentsSection",
+                                ).style.display = "block";
+                            } else {
+                                commentsTableBody.innerHTML =
+                                    '<tr><td colspan="5" style="border: 1px solid #0F0;">No comments found for this ticket.</td></tr>';
+                                document.getElementById(
+                                    "customerTicketCommentsSection",
+                                ).style.display = "block";
+                            }
+
                         } else {
                             apiResponse.textContent = `Error: ${data.message || JSON.stringify(data)}`;
+                            document.getElementById(
+                                "customerTicketCommentsSection",
+                            ).style.display = "none"; // Hide comments section on error
                         }
                     } catch (error) {
                         apiResponse.textContent = "Error: " + error.message;
                         console.error("API Call Error:", error);
+                        document.getElementById(
+                            "customerTicketCommentsSection",
+                        ).style.display = "none"; // Hide comments section on error
                     }
                 });
 
