@@ -85,7 +85,7 @@ func UpdateTicket(db *bun.DB, ctx context.Context, ticket *Ticket) error {
 
 	_, err = db.NewUpdate().
 		Model(ticket).
-		Column("title", "description", "status", "priority", "requester_id", "assignee_id", "updated_at", "closed_at").
+		Column("status", "priority", "assignee_id", "updated_at", "closed_at").
 		Where("id = ?", ticket.ID).
 		Exec(ctx)
 	return err
@@ -111,6 +111,16 @@ func ListTicketsByAssigneeID(db *bun.DB, ctx context.Context, assigneeID int64) 
 func ListTicketsByRequesterID(db *bun.DB, ctx context.Context, requesterID int64) ([]Ticket, error) {
 	var tickets []Ticket
 	err := db.NewSelect().Model(&tickets).Where("requester_id = ?", requesterID).Scan(ctx)
+	if err != nil {
+		return nil, err
+	}
+	return tickets, nil
+}
+
+// ListOpenTickets retrieves all tickets with status 'Open' from the database.
+func ListOpenTickets(db *bun.DB, ctx context.Context) ([]Ticket, error) {
+	var tickets []Ticket
+	err := db.NewSelect().Model(&tickets).Where("status = ?", "Open").Scan(ctx)
 	if err != nil {
 		return nil, err
 	}

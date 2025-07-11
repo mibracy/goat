@@ -236,6 +236,19 @@ func (h *TicketHandler) ListAgentTickets(w http.ResponseWriter, r *http.Request)
 	renderer.PrettyJSON(w, r, tickets)
 }
 
+func (h *TicketHandler) ListOpenTickets(w http.ResponseWriter, r *http.Request) {
+	ctx := context.Background()
+
+	tickets, err := models.ListOpenTickets(h.db, ctx)
+	if err != nil {
+		render.Status(r, http.StatusInternalServerError)
+		renderer.PrettyJSON(w, r, err.Error())
+		return
+	}
+	render.Status(r, http.StatusOK)
+	renderer.PrettyJSON(w, r, tickets)
+}
+
 func (h *TicketHandler) GetAgentTicket(w http.ResponseWriter, r *http.Request) {
 	userID, ok := r.Context().Value(middleware.UserIDKey).(string)
 	if !ok {
@@ -317,15 +330,10 @@ func (h *TicketHandler) UpdateAgentTicket(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	if !existingTicket.AssigneeID.Valid || existingTicket.AssigneeID.Int64 != assigneeID {
-		render.Status(r, http.StatusForbidden)
-		renderer.PrettyJSON(w, r, "You are not authorized to update this ticket")
-		return
-	}
-
 	var req struct {
-		Status   string `json:"status"`
-		Priority string `json:"priority"`
+		Status     *string `json:"status"`
+		Priority   *string `json:"priority"`
+		AssigneeID *int64  `json:"AssigneeID"`
 	}
 
 	if err := render.DecodeJSON(r.Body, &req); err != nil {
@@ -334,8 +342,38 @@ func (h *TicketHandler) UpdateAgentTicket(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	existingTicket.Status = req.Status
-	existingTicket.Priority = req.Priority
+	// If the ticket is currently unassigned, or assigned to the current agent, allow updates.
+	// If assigned to another agent, prevent updates unless the current agent is assigning it to themselves.
+	canUpdate := true
+	if existingTicket.AssigneeID.Valid && existingTicket.AssigneeID.Int64 != assigneeID {
+		// Ticket is assigned to someone else
+		if req.AssigneeID == nil || *req.AssigneeID != assigneeID {
+			// If not trying to assign to self, forbid update
+			canUpdate = false
+		}
+	}
+
+	if !canUpdate {
+		render.Status(r, http.StatusForbidden)
+		renderer.PrettyJSON(w, r, "You are not authorized to update this ticket")
+		return
+	}
+
+	if req.Status != nil && *req.Status != "" {
+		existingTicket.Status = *req.Status
+	}
+	if req.Priority != nil && *req.Priority != "" {
+		existingTicket.Priority = *req.Priority
+	}
+
+	// Explicitly set AssigneeID from the JWT-derived assigneeID if req.AssigneeID is provided
+	if req.AssigneeID != nil {
+		existingTicket.AssigneeID = sql.NullInt64{Int64: assigneeID, Valid: true}
+	} else if !existingTicket.AssigneeID.Valid {
+		// If it was unassigned and not provided in request, keep it unassigned
+		existingTicket.AssigneeID = sql.NullInt64{Valid: false}
+	}
+	// If req.AssigneeID is nil and existingTicket.AssigneeID is valid, keep existing AssigneeID
 
 	if err := models.UpdateTicket(h.db, r.Context(), existingTicket); err != nil {
 		render.Status(r, http.StatusInternalServerError)

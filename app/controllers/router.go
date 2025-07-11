@@ -57,6 +57,7 @@ func SetupServer() {
 	r.Route("/agent", func(r chi.Router) {
 		r.Use(middleware.AuthMiddleware)
 		r.Use(middleware.RoleMiddleware("Admin", "Agent"))
+		r.Get("/tickets/open", ticketHandler.ListOpenTickets)
 		r.Get("/tickets", ticketHandler.ListAgentTickets)
 		r.Get("/tickets/{id}", ticketHandler.GetAgentTicket)
 		r.Put("/tickets/{id}", ticketHandler.UpdateAgentTicket)

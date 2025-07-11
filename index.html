@@ -242,6 +242,27 @@
                 padding: 10px;
                 margin-top: 20px;
             }
+
+            /* Mobile responsiveness */
+            @media (max-width: 768px) {
+                .form-group-item {
+                    grid-template-columns: 1fr; /* Stack labels and inputs vertically */
+                }
+
+                .form-group-item label {
+                    text-align: left; /* Align labels to the left on mobile */
+                    padding-right: 0;
+                }
+
+                .form-group-grid {
+                    grid-template-columns: 1fr; /* Stack grid items vertically */
+                }
+
+                .button-group button {
+                    flex-grow: unset; /* Remove flex-grow for better stacking */
+                    width: 100%; /* Full width buttons */
+                }
+            }
         </style>
     </head>
     <body>
@@ -996,10 +1017,11 @@
         <div id="agent" class="model-section">
             <h2>Agent Features</h2>
             <div>
-                <h3>List Assigned Tickets (GET /agent/tickets)</h3>
-                <form id="listAgentTicketsForm">
-                    <button type="submit">List My Tickets</button>
-                </form>
+                <h3>Agent Ticket Actions</h3>
+                <div class="button-group">
+                    <button onclick="callApi('GET', `${baseUrl}/agent/tickets`)">List My Tickets</button>
+                    <button onclick="callApi('GET', `${baseUrl}/agent/tickets/open`)">List All Open Tickets</button>
+                </div>
             </div>
 
             <div>
@@ -1100,6 +1122,23 @@
                     <button type="submit">Add Comment</button>
                 </form>
             </div>
+
+            <div>
+                <h3>Assign Ticket to Self (PUT /agent/tickets/{id})</h3>
+                <form id="assignAgentTicketForm">
+                    <div class="form-group-item">
+                        <label for="assignTicketId">Ticket ID:</label>
+                        <input
+                            type="text"
+                            id="assignTicketId"
+                            name="id"
+                            required
+                            class="js-number-input"
+                        />
+                    </div>
+                    <button type="submit">Assign to Self</button>
+                </form>
+            </div>
         </div>
 
         <div id="customer" class="model-section">
@@ -1124,6 +1163,18 @@
                             id="customerTicketDescription"
                             name="description"
                         ></textarea>
+                    </div>
+                    <div class="form-group-item">
+                        <label for="customerTicketPriority">Priority:</label>
+                        <select
+                            id="customerTicketPriority"
+                            name="priority"
+                        >
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                            <option value="Urgent">Urgent</option>
+                        </select>
                     </div>
                     <button type="submit">Create Ticket</button>
                 </form>
@@ -1790,12 +1841,7 @@
                 });
 
             // Agent Forms
-            document
-                .getElementById("listAgentTicketsForm")
-                .addEventListener("submit", (e) => {
-                    e.preventDefault();
-                    callApi("GET", `${baseUrl}/agent/tickets`);
-                });
+            // Removed listAgentTicketsForm event listener as it's replaced by new buttons
 
             document
                 .getElementById("loadAgentTicketForm")
@@ -1899,6 +1945,45 @@
                     );
                 });
 
+            document
+                .getElementById("assignAgentTicketForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+                    const ticketId = document.getElementById("assignTicketId").value;
+                    if (!ticketId) return;
+
+                    // Assuming the backend will assign the ticket to the authenticated agent
+                    // when assignee_id is not explicitly provided in the payload for this specific action.
+                    // If the backend requires the agent's ID, it would need to be extracted from the JWT.
+                    // For simplicity and security (avoiding JWT parsing on frontend), we rely on backend logic.
+                    const userId = getUserIdFromJwt();
+                    console.log('User ID from JWT:', userId);
+                    if (userId === null) {
+                        alert("Could not get user ID from JWT. Please log in again.");
+                        return;
+                    }
+                    const assigneeIdInt = parseInt(userId);
+                    console.log('Parsed Assignee ID:', assigneeIdInt);
+                    callApi("PUT", `${baseUrl}/agent/tickets/${ticketId}`, { AssigneeID: assigneeIdInt });
+                });
+
+            function getUserIdFromJwt() {
+                console.log('JWT Token in getUserIdFromJwt:', jwtToken);
+                try {
+                    const base64Url = jwtToken.split('.')[1];
+                    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+                    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+                        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+                    }).join(''));
+                    const payload = JSON.parse(jsonPayload);
+                    console.log('JWT Payload:', payload);
+                    return payload.sub; // 'sub' contains the user ID
+                } catch (e) {
+                    console.error("Error decoding JWT:", e);
+                    return null;
+                }
+            }
+
             // Customer Forms
             document
                 .getElementById("createCustomerTicketForm")
@@ -1911,9 +1996,14 @@
                         "customerTicketDescription",
                     ).value;
 
+                    const priority = document.getElementById(
+                        "customerTicketPriority",
+                    ).value;
+
                     const ticketData = {
                         title: title,
                         description: description,
+                        priority: priority,
                     };
 
                     callApi("POST", `${baseUrl}/customer/tickets`, ticketData);
