@@ -24,6 +24,7 @@ debug
 
 # Node modules
 node_modules/
+.continue/
 
 # Build output
 dist/
