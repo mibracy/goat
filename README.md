@@ -35,6 +35,7 @@ The system is built around the idea of providing a solid backend for a ticketing
 
 1.  **Prerequisites:**
     *   Go (version 1.x or higher) installed.
+    *   Node.js (version 18 or higher) and pnpm installed.
     *   MariaDB installed.
 2.  **Clone the repository:**
     ```bash
@@ -43,20 +44,22 @@ The system is built around the idea of providing a solid backend for a ticketing
     ```
 2.5. **Create database db_schema.sql**
 
-3.  **Install dependencies:**
+3.  **Install backend dependencies:**
     ```bash
     go mod tidy
     ```
-4.  **Run the application:**
+4.  **Run the backend application:**
     ```bash
     go run main.go
     ```
 
-5.  **Using the HTML Page:**
-    Once the server is running, you can interact with the API's using the provided HTML page.
+5.  **Install frontend dependencies and run the frontend application:**
     ```bash
-    The server will start on `http://localhost:8420`
+    cd frontend
+    pnpm install
+    pnpm dev
     ```
+    The frontend application will typically run on `http://localhost:5173` (or another port if 5173 is in use).
 
 ## Docker
 
