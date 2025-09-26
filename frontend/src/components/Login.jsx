@@ -1,20 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { callApi, updateJwtToken } from '../utils/api';
 
-const Login = ({ activeModel, setApiResponse }) => {
+const Login = ({ setApiResponse }) => {
     const [activeLoginSection, setActiveLoginSection] = useState('authenticate');
     const [jwtToken, setJwtToken] = useState(localStorage.getItem("jwtToken") || "");
+    const [currentJwtDisplay, setCurrentJwtDisplay] = useState("");
 
     useEffect(() => {
-        updateJwtDisplay();
+        setCurrentJwtDisplay(jwtToken || "No JWT token found.");
     }, [jwtToken]);
-
-    const updateJwtDisplay = () => {
-        const currentJwtDisplay = document.getElementById("currentJwt");
-        if (currentJwtDisplay) {
-            currentJwtDisplay.textContent = jwtToken || "No JWT token found.";
-        }
-    };
 
     const clearJwt = () => {
         updateJwtToken("");
@@ -69,12 +63,8 @@ const Login = ({ activeModel, setApiResponse }) => {
         await callApi("POST", `/reset-password`, { token, new_password }, setApiResponse);
     };
 
-    if (activeModel !== 'login') {
-        return null;
-    }
-
     return (
-        <div id="login" className="model-section active">
+        <div id="login" className="model-section">
             <h2>Login / Register</h2>
 
             <div className="menu">
@@ -131,7 +121,7 @@ const Login = ({ activeModel, setApiResponse }) => {
             {activeLoginSection === 'clear-jwt' && (
                 <div id="login-clear-jwt" className="login-sub-section">
                     <h3>Current JWT:</h3>
-                    <pre id="currentJwt"></pre>
+                    <pre id="currentJwt">{currentJwtDisplay}</pre>
                     <button onClick={clearJwt}>Clear JWT</button>
                 </div>
             )}

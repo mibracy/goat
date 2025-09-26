@@ -11,7 +11,7 @@ function App() {
     <Layout>
       {({ activeModel, setApiResponse }) => (
         <>
-          {activeModel === 'login' && <Login activeModel={activeModel} setApiResponse={setApiResponse} />}
+          {activeModel === 'login' && <Login setApiResponse={setApiResponse} />}
           {activeModel === 'admin' && <Admin activeModel={activeModel} setApiResponse={setApiResponse} />}
           {activeModel === 'agent' && <Agent activeModel={activeModel} setApiResponse={setApiResponse} />}
           {activeModel === 'customer' && <Customer activeModel={activeModel} setApiResponse={setApiResponse} />}

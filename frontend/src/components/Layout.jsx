@@ -20,12 +20,7 @@ const Layout = ({ children }) => {
                 <button onClick={() => showModel('customer')} className={activeModel === 'customer' ? 'active' : ''}>Customer</button>
             </div>
 
-            {React.Children.map(children, child => {
-                if (React.isValidElement(child)) {
-                    return React.cloneElement(child, { activeModel, setApiResponse });
-                }
-                return child;
-            })}
+            {children({ activeModel, setApiResponse })}
 
             <h2>API Response:</h2>
             <div id="response-container">
