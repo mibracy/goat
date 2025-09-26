@@ -27,6 +27,11 @@ body {
             0 0 20px #0f0;
     }
 }
+#root {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0;
+}
 
 h1 {
     text-align: center;
@@ -44,6 +49,10 @@ h2:hover {
 }
 .menu {
     text-align: center;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
 }
 .menu button {
     background-color: #222;
@@ -60,6 +69,7 @@ h2:hover {
 
 .menu,
 .model-section,
+div,
 #response-container,
 .form-group-item,
 .form-group-grid {

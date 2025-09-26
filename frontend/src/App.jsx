@@ -1,5 +1,4 @@
 import './App.css'
-import './index.css'
 import Layout from './components/Layout'
 import Login from './components/Login'
 import Admin from './components/Admin'
