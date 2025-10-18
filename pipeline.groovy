@@ -14,7 +14,7 @@ pipeline {
         // Use a relative path for cross-platform compatibility
         TARGET_DIR = 'target'
         GRADLE_HOME = tool 'Gradle 7.6.2'
-        GITHUB_REPOS = [
+        GITHUB_REPOS = "[
             'WebFrontend': 'your-organization/webfrontend',
             'WebBackend': 'your-organization/webbackend',
             'WebMessaging': 'your-organization/webmessaging',
@@ -23,7 +23,7 @@ pipeline {
             'BatchPurge': 'your-organization/batchpurge',
             'Database': 'your-organization/database',
             'Deploy': 'your-organization/deploy'
-        ]
+        ]"
     }
 
     stages {
