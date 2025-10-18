@@ -4,9 +4,9 @@ pipeline {
     parameters {
         // NOTE: The 'when' directive is not valid here.
         // The Extended Choice Parameter plugin is required for multiChoice.
-        multiChoice(name: 'ARTIFACTS_TO_BUILD', choices: ['Web', 'Batch', 'Database'], description: 'Select artifact type(s) to build')
-        multiChoice(name: 'WEB_PROJECTS', choices: ['Frontend', 'Backend', 'Messaging'], description: 'Select Web Project(s) to build')
-        multiChoice(name: 'BATCH_JOBS', choices: ['Copy', 'Archive', 'Purge'], description: 'Select Batch Job(s) to build')
+        choice(name: 'ARTIFACTS_TO_BUILD', choices: ['Web', 'Batch', 'Database'], description: 'Select artifact type(s) to build')
+        choice(name: 'WEB_PROJECTS', choices: ['Frontend', 'Backend', 'Messaging'], description: 'Select Web Project(s) to build')
+        choice(name: 'BATCH_JOBS', choices: ['Copy', 'Archive', 'Purge'], description: 'Select Batch Job(s) to build')
         string(name: 'RELEASE_NUMBER', defaultValue: '1.0', description: 'Enter the release number')
     }
 
