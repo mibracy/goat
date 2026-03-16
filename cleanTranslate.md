@@ -42,20 +42,57 @@ END;
 ```
 
 ### The "Auto-View" Generator
-Run this script to generate a `CREATE VIEW` statement for any table. It automatically applies the cleanup to every `VARCHAR2` and `CHAR` column by querying the Data Dictionary.
+Run this script to generate a `CREATE VIEW` statement for any table. It automatically applies the cleanup to every `VARCHAR2` and `CHAR` column by querying the Data Dictionary. And a series of GRANT statements in one go.
 
 ```sql
-SELECT 'CREATE OR REPLACE VIEW v_clean_' || table_name || ' AS SELECT ' || 
-       LISTAGG(
-           'TRANSLATE(' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'' || ' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'') AS ' || column_name, 
-           ', '
-       ) WITHIN GROUP (ORDER BY column_id) || 
-       ' FROM ' || table_name || ';'
+SELECT 
+    -- Part 1: The View Definition
+    'CREATE OR REPLACE VIEW v_clean_' || table_name || ' AS SELECT ' || 
+    LISTAGG(
+        'TRANSLATE(' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'' || ' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'') AS ' || column_name, 
+        ', '
+    ) WITHIN GROUP (ORDER BY column_id) || 
+    ' FROM ' || table_name || ';' AS script_output
 FROM all_tab_columns
-WHERE table_name = 'YOUR_TABLE_NAME' -- REPLACE THIS (MUST BE UPPERCASE)
-  AND data_type IN ('VARCHAR2', 'CHAR') 
-GROUP BY table_name;
+WHERE table_name IN ('TABLE_1', 'TABLE_2', 'TABLE_3') -- Add your list here (UPPERCASE)
+  AND data_type IN ('VARCHAR2', 'CHAR')
+GROUP BY table_name
+
+UNION ALL
+
+-- Part 2: The Automated SELECT-only Grants
+SELECT DISTINCT
+    'GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';'
+FROM all_tab_privs
+WHERE table_name IN ('TABLE_1', 'TABLE_2', 'TABLE_3') -- Match the list above
+  AND privilege = 'SELECT';
 ```
+
+---
+## 2.5. The "Auto-View" Generator + Special Characters
+
+```sql
+SELECT 
+    -- Part 1: The View Definitions
+    'CREATE OR REPLACE VIEW v_clean_' || table_name || ' AS SELECT ' || 
+    LISTAGG(
+        'TRANSLATE(' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'' || ' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'') AS ' || column_name, 
+        ', '
+    ) WITHIN GROUP (ORDER BY column_id) || 
+    ' FROM ' || table_name || ';' AS script_output
+FROM all_tab_columns
+WHERE table_name IN ('TABLE_1', 'TABLE_2') -- REPLACE WITH YOUR TABLES (UPPERCASE)
+  AND data_type IN ('VARCHAR2', 'CHAR')
+GROUP BY table_name
+
+UNION ALL
+
+-- Part 2: The Automated SELECT-only Grants
+SELECT DISTINCT
+    'GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';'
+FROM all_tab_privs
+WHERE table_name IN ('TABLE_1', 'TABLE_2') -- MATCH THE LIST ABOVE
+  AND privilege = 'SELECT';
 
 ---
 
