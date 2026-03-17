@@ -1,0 +1,263 @@
+body {
+    background-color: #000;
+    color: #0f0;
+    font-family: "Courier New", Courier, monospace;
+    margin: 20px;
+}
+@keyframes pulse {
+    0% {
+        text-shadow:
+            0 0 5px #0f0,
+            0 0 10px #0f0,
+            0 0 15px #0f0,
+            0 0 20px #0f0;
+    }
+    50% {
+        text-shadow:
+            0 0 10px #0f0,
+            0 0 20px #0f0,
+            0 0 30px #0f0,
+            0 0 40px #0f0;
+    }
+    100% {
+        text-shadow:
+            0 0 5px #0f0,
+            0 0 10px #0f0,
+            0 0 15px #0f0,
+            0 0 20px #0f0;
+    }
+}
+#root {
+    border: none !important;
+    margin: 0 !important;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 5px;
+    animation: pulse 4.2s infinite alternate; /* Apply the pulse animation */
+}
+h1:hover,
+h2:hover {
+    text-shadow:
+        0 0 5px #0f0,
+        0 0 10px #0f0,
+        0 0 15px #0f0,
+        0 0 20px #0f0;
+}
+.menu {
+    text-align: center;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.menu button {
+    background-color: #222;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 10px 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+.menu button.active {
+    background-color: #0f0;
+    color: #000;
+}
+
+.menu,
+.model-section,
+div,
+#response-container,
+.form-group-item,
+.form-group-grid {
+    border: 1px solid #0f0;
+    border-radius: 0;
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+h2,
+h3 {
+    color: #0f0;
+    text-transform: uppercase;
+    transition: text-shadow 0.3s ease-in-out;
+}
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+input[type="text"],
+input[type="number"],
+input[type="password"],
+select,
+textarea {
+    background-color: #222;
+    color: #0f0;
+    border: 1px solid #0f0;
+    padding: 8px;
+    width: 200px; /* Default width, overridden by grid */
+    margin-bottom: 0; /* Removed margin-bottom, using grid gap */
+    -webkit-appearance: none; /* Remove default dropdown arrow for better styling */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%204%205%22%3E%3Cpath%20fill%3D%22%230F0%22%20d%3D%22M2%200L0%202h4zm0%205L0%203h4z%22%2F%3E%3C%2Fsvg%3E"); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 0.7em top 50%;
+    background-size: 0.65em auto;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 1px solid #0f0;
+    background-color: #222;
+    vertical-align: middle;
+    position: relative;
+    cursor: pointer;
+}
+
+input[type="checkbox"]:checked {
+    background-color: #0f0;
+}
+
+input[type="checkbox"]:checked::after {
+    content: "\2713"; /* Checkmark character */
+    color: #000;
+    font-size: 12px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+textarea {
+    resize: vertical; /* Allow vertical resizing */
+    min-height: 80px; /* Minimum height for multiline */
+}
+
+/* Style for the form layout */
+.form-group-item {
+    display: grid;
+    grid-template-columns: 150px 1fr; /* Label fixed, input fluid */
+    gap: 10px;
+    margin-bottom: 10px; /* Gap between form items */
+    align-items: center;
+}
+
+.form-group-item label {
+    text-align: right;
+    padding-right: 10px;
+}
+
+.form-group-item input,
+.form-group-item select,
+.form-group-item textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Specific width for title input */
+#createTicketForm .form-group-item:nth-child(1) {
+    /* Targeting the title form-group-item */
+    grid-template-columns: 150px 40%; /* Label 150px, input 40% of the row */
+}
+
+/* Full width for description */
+#createTicketForm .form-group-item.full-width-item {
+    grid-template-columns: 150px 1fr; /* Label 150px, input takes rest */
+}
+
+#createTicketForm .form-group-item.full-width-item label {
+    text-align: left; /* Align label to left for full-width items */
+    padding-right: 0;
+}
+
+.form-group-grid {
+    display: grid;
+    grid-template-columns: repeat(
+        2,
+        1fr
+    ); /* Two columns for status/priority and requester/assignee */
+    gap: 10px;
+}
+
+.form-group-grid .form-group-item {
+    margin-bottom: 0; /* Remove margin as gap handles it */
+}
+button {
+    background-color: #0f0;
+    color: #000;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: text-shadow 0.3s ease-in-out;
+    box-sizing: border-box;
+}
+button:hover {
+    background-color: #0a0;
+    text-shadow:
+        0 0 5px #0f0,
+        0 0 10px #0f0,
+        0 0 15px #0f0,
+        0 0 20px #0f0;
+}
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Spacing between buttons */
+    justify-content: center; /* Center buttons */
+    margin-bottom: 10px;
+}
+.button-group form {
+    margin: 0; /* Remove default form margin */
+}
+.button-group button {
+    width: auto; /* Adjust button width */
+    flex-grow: 1; /* Allow buttons to grow and fill space */
+    min-width: 120px; /* Minimum width for mobile */
+}
+pre {
+    background-color: #111;
+    border: 1px dashed #0f0;
+    padding: 10px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+#response-container {
+    max-height: 50vh;
+    overflow-y: auto;
+    border: 1px solid #0f0;
+    padding: 10px;
+    margin-top: 20px;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .form-group-item {
+        grid-template-columns: 1fr; /* Stack labels and inputs vertically */
+    }
+
+    .form-group-item label {
+        text-align: left; /* Align labels to the left on mobile */
+        padding-right: 0;
+    }
+
+    .form-group-grid {
+        grid-template-columns: 1fr; /* Stack grid items vertically */
+    }
+
+    .button-group button {
+        flex-grow: unset; /* Remove flex-grow for better stacking */
+        width: 100%; /* Full width buttons */
+    }
+}
