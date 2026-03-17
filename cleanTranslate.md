@@ -42,30 +42,46 @@ END;
 ```
 
 ### The "Auto-View" Generator
-Run this script to generate a `CREATE VIEW` statement for any table. It automatically applies the cleanup to every `VARCHAR2` and `CHAR` column by querying the Data Dictionary. And a series of GRANT statements in one go.
+Run this script to generate a `CREATE VIEW` statement for any table. It automatically applies the cleanup to every `VARCHAR2` and `CHAR` column by querying the Data Dictionary. High-Speed parallel indexes and a series of GRANT statements in one go.
 
 ```sql
 SELECT 
-    -- Part 1: The View Definition
-    'CREATE OR REPLACE VIEW v_clean_' || table_name || ' AS SELECT ' || 
-    LISTAGG(
-        'TRANSLATE(' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'' || ' || column_name || ', ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'') AS ' || column_name, 
-        ', '
-    ) WITHIN GROUP (ORDER BY column_id) || 
-    ' FROM ' || table_name || ';' AS script_output
-FROM all_tab_columns
-WHERE table_name IN ('TABLE_1', 'TABLE_2', 'TABLE_3') -- Add your list here (UPPERCASE)
-  AND data_type IN ('VARCHAR2', 'CHAR')
-GROUP BY table_name
+    DBMS_XMLGEN.CONVERT(
+        XMLAGG(
+            XMLELEMENT(e, 
+                -- View Definition (Mirroring all columns)
+                'CREATE OR REPLACE VIEW v_clean_' || t.table_name || ' AS SELECT ' || 
+                (SELECT LISTAGG(
+                    CASE 
+                        WHEN data_type IN ('VARCHAR2', 'CHAR') 
+                        THEN 'TRANSLATE(' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '' || ' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '')'
+                        ELSE column_name 
+                    END || ' AS ' || column_name, ', ')
+                 WITHIN GROUP (ORDER BY column_id)
+                 FROM all_tab_columns 
+                 WHERE table_name = t.table_name) || 
+                ' FROM ' || t.table_name || ';' || CHR(10) ||
+                
+                -- High-Speed Parallel Indexes
+                (SELECT LISTAGG('CREATE INDEX idx_clean_' || ic.table_name || '_' || SUBSTR(ic.column_name,1,10) || ' ON ' || ic.table_name || 
+                 '(TRANSLATE(' || ic.column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '' || ' || ic.column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 '')) PARALLEL 4;' || 
+                 CHR(10) || 'ALTER INDEX idx_clean_' || ic.table_name || '_' || SUBSTR(ic.column_name,1,10) || ' NOPARALLEL;', CHR(10))
+                 WITHIN GROUP (ORDER BY ic.column_name)
+                 FROM all_ind_columns ic
+                 JOIN all_tab_columns tc ON ic.table_name = tc.table_name AND ic.column_name = tc.column_name
+                 WHERE ic.table_name = t.table_name 
+                   AND tc.data_type IN ('VARCHAR2', 'CHAR')
+                   AND ic.column_position = 1) || CHR(10) ||
 
-UNION ALL
-
--- Part 2: The Automated SELECT-only Grants
-SELECT DISTINCT
-    'GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';'
-FROM all_tab_privs
-WHERE table_name IN ('TABLE_1', 'TABLE_2', 'TABLE_3') -- Match the list above
-  AND privilege = 'SELECT';
+                -- Grants
+                (SELECT LISTAGG('GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';', CHR(10))
+                 WITHIN GROUP (ORDER BY grantee)
+                 FROM all_tab_privs 
+                 WHERE table_name = t.table_name AND privilege = 'SELECT')
+            ).EXTRACT('//text()')
+        ).GETCLOBVAL(), 1) AS deploy_script
+FROM (SELECT DISTINCT table_name FROM all_tab_columns WHERE table_name IN ('YOUR_TABLE_NAME')) t
+GROUP BY table_name;
 ```
 
 ---
@@ -73,28 +89,66 @@ WHERE table_name IN ('TABLE_1', 'TABLE_2', 'TABLE_3') -- Match the list above
 
 ```sql
 SELECT 
-    -- Part 1: The View Definitions
-    'CREATE OR REPLACE VIEW v_clean_' || table_name || ' AS SELECT ' || 
-    LISTAGG(
-        'TRANSLATE(' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'' || ' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'') AS ' || column_name, 
-        ', '
-    ) WITHIN GROUP (ORDER BY column_id) || 
-    ' FROM ' || table_name || ';' AS script_output
-FROM all_tab_columns
-WHERE table_name IN ('TABLE_1', 'TABLE_2') -- REPLACE WITH YOUR TABLES (UPPERCASE)
-  AND data_type IN ('VARCHAR2', 'CHAR')
-GROUP BY table_name
+    DBMS_XMLGEN.CONVERT(
+        XMLAGG(
+            XMLELEMENT(e, 
+                -- View Definition
+                'CREATE OR REPLACE VIEW v_clean_' || t.table_name || ' AS SELECT ' || 
+                (SELECT LISTAGG(
+                    CASE 
+                        WHEN data_type IN ('VARCHAR2', 'CHAR') 
+                        THEN 'TRANSLATE(' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'' || ' || column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'')'
+                        ELSE column_name 
+                    END || ' AS ' || column_name, ', ')
+                 WITHIN GROUP (ORDER BY column_id)
+                 FROM all_tab_columns 
+                 WHERE table_name = t.table_name) || 
+                ' FROM ' || t.table_name || ';' || CHR(10) ||
+                
+                -- High-Speed Parallel Indexes
+                (SELECT LISTAGG('CREATE INDEX idx_clean_' || ic.table_name || '_' || SUBSTR(ic.column_name,1,10) || ' ON ' || ic.table_name || 
+                 '(TRANSLATE(' || ic.column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'' || ' || ic.column_name || ', CHR(39) || ''abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 !@#$%^&*()-_=+[]{}|;:,.<>/?'')) PARALLEL 4;' || 
+                 CHR(10) || 'ALTER INDEX idx_clean_' || ic.table_name || '_' || SUBSTR(ic.column_name,1,10) || ' NOPARALLEL;', CHR(10))
+                 WITHIN GROUP (ORDER BY ic.column_name)
+                 FROM all_ind_columns ic
+                 JOIN all_tab_columns tc ON ic.table_name = tc.table_name AND ic.column_name = tc.column_name
+                 WHERE ic.table_name = t.table_name 
+                   AND tc.data_type IN ('VARCHAR2', 'CHAR')
+                   AND ic.column_position = 1) || CHR(10) ||
 
-UNION ALL
+                -- Grants
+                (SELECT LISTAGG('GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';', CHR(10))
+                 WITHIN GROUP (ORDER BY grantee)
+                 FROM all_tab_privs 
+                 WHERE table_name = t.table_name AND privilege = 'SELECT')
+            ).EXTRACT('//text()')
+        ).GETCLOBVAL(), 1) AS deploy_script
+FROM (SELECT DISTINCT table_name FROM all_tab_columns WHERE table_name IN ('YOUR_TABLE_NAME')) t
+GROUP BY table_name;
+```
 
--- Part 2: The Automated SELECT-only Grants
-SELECT DISTINCT
-    'GRANT SELECT ON v_clean_' || table_name || ' TO ' || grantee || ';'
-FROM all_tab_privs
-WHERE table_name IN ('TABLE_1', 'TABLE_2') -- MATCH THE LIST ABOVE
-  AND privilege = 'SELECT';
 
 ---
+## 2.5.1. Rollback Script
+
+```sql
+SELECT 
+    DBMS_XMLGEN.CONVERT(
+        XMLAGG(
+            XMLELEMENT(e, 
+                'DROP VIEW v_clean_' || t.table_name || ';' || CHR(10) ||
+                (SELECT LISTAGG('DROP INDEX idx_clean_' || ic.table_name || '_' || SUBSTR(ic.column_name,1,10) || ';', CHR(10))
+                 WITHIN GROUP (ORDER BY ic.column_name)
+                 FROM all_ind_columns ic
+                 JOIN all_tab_columns tc ON ic.table_name = tc.table_name AND ic.column_name = tc.column_name
+                 WHERE ic.table_name = t.table_name 
+                   AND tc.data_type IN ('VARCHAR2', 'CHAR')
+                   AND ic.column_position = 1)
+            ).EXTRACT('//text()')
+        ).GETCLOBVAL(), 1) AS undo_script
+FROM (SELECT DISTINCT table_name FROM all_tab_columns WHERE table_name IN ('YOUR_TABLE_NAME')) t
+GROUP BY table_name;
+```
 
 ## 3. Performance Summary
 
